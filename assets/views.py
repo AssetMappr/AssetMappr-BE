@@ -7,6 +7,7 @@ from .models import Asset
 from .serializer import *
 from drf_yasg.utils import swagger_auto_schema
 
+
 class AssetsView(APIView):
 
     @staticmethod
@@ -18,10 +19,12 @@ class AssetsView(APIView):
         """
         data = Asset.objects.all()
 
-        serializer = AssetSerializer(data, context={'request': request}, many=True)
+        serializer = AssetSerializer(
+            data, context={
+                'request': request}, many=True)
 
         return Response(serializer.data)
-    
+
     @staticmethod
     def post(request):
         """
@@ -51,7 +54,7 @@ class AssetsView(APIView):
 #             serializer.save()
 #             return Response(status=status.HTTP_201_CREATED)
 
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # @api_view(['PUT', 'DELETE'])
 # def asset_detail(request, pk):
@@ -65,9 +68,8 @@ class AssetsView(APIView):
 #         if serializer.is_valid():
 #             serializer.save()
 #             return Response(status=status.HTTP_204_NO_CONTENT)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #     elif request.method == 'DELETE':
 #         Asset.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
-

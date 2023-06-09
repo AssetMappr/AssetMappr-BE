@@ -1,12 +1,12 @@
+from rest_framework import permissions
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from django.contrib import admin
 from rest_framework import routers
 from django.urls import path, re_path, include
 # from django.conf.urls import url
 from assets import views
 router = routers.DefaultRouter()
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework import permissions
 # router.register('assets', views.AssetsView.as_view(), basename='assets')
 # router.register(r'api/assets/1', views.asset_detail, basename='api')
 # from rest_framework.schemas import get_schema_view
