@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from .models import Asset
-from .serializer import *
+from .serializer import AssetSerializer
 # from drf_yasg.utils import swagger_auto_schema
 
 
@@ -29,6 +29,11 @@ class AssetsView(APIView):
         Get list of assets
 
         Fetches list of all available assets
+
+        Parameters:
+            request(HttpRequest): User requests.
+        Returns:
+            response(HttpResponse): Reponse.
         """
         data = Asset.objects.all()
 
@@ -44,6 +49,11 @@ class AssetsView(APIView):
         Add an asset
 
         Adds an asset to list of available assets
+
+        Parameters:
+            request(HttpRequest): User requests.
+        Returns:
+            response(HttpResponse): Reponse.
         """
         serializer = AssetSerializer(data=request.data)
         if serializer.is_valid():

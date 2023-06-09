@@ -26,7 +26,7 @@ SchemaView = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-app_name = 'api'
+APP_NAME = 'api'
 urlpatterns = [
     path('api/', include(('assets.urls'))),
     path(
