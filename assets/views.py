@@ -1,14 +1,27 @@
+"""
+This module maps the routes of API paths to respective views.
+
+Author: Shashank Shekhar
+"""
+
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
 
 from .models import Asset
 from .serializer import *
-from drf_yasg.utils import swagger_auto_schema
+# from drf_yasg.utils import swagger_auto_schema
 
 
 class AssetsView(APIView):
+    """
+    Defines different asset views.
+
+    Methods:
+        get(request): Defines the GET method to get all available assets.
+        post(request): Defines the POST method to create a new asset.
+    """
 
     @staticmethod
     def get(request):
