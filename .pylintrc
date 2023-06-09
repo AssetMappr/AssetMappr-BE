@@ -1,3 +1,4 @@
 [MASTER]
 disable = R0903
 ignore=migrations
+ignore-patterns=.*migrations.*
