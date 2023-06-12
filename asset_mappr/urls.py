@@ -1,16 +1,21 @@
-from django.contrib import admin
-from rest_framework import routers
-from django.urls import path, re_path, include
-# from django.conf.urls import url
-from assets import views
-router = routers.DefaultRouter()
-from drf_yasg.views import get_schema_view
+"""
+This module maps the routes of API paths to respective views.
+
+Author: Shashank Shekhar
+"""
+
 from drf_yasg import openapi
-from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions, routers
+# from django.contrib import admin
+from django.urls import path, include
+# from django.conf.urls import url
+# from assets import views
+router = routers.DefaultRouter()
 # router.register('assets', views.AssetsView.as_view(), basename='assets')
 # router.register(r'api/assets/1', views.asset_detail, basename='api')
 # from rest_framework.schemas import get_schema_view
-schema_view = get_schema_view(
+SchemaView = get_schema_view(
     openapi.Info(
         title="AssetMappr APIs",
         default_version='v1',
@@ -21,15 +26,22 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-app_name = 'api'
+APP_NAME = 'api'
 urlpatterns = [
-
-    # path('users/', views.AssetsView.as_view(), name='user-list'),
     path('api/', include(('assets.urls'))),
-    path('', schema_view.with_ui('swagger', cache_timeout=0),
-         name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc',
-         cache_timeout=0), name='schema-redoc'),
+    path(
+        '',
+        SchemaView.with_ui(
+            'swagger',
+            cache_timeout=0),
+        name='schema-swagger-ui'),
+    path(
+        'redoc/',
+        SchemaView.with_ui(
+            'redoc',
+            cache_timeout=0),
+        name='schema-redoc'),
+    # path('users/', views.AssetsView.as_view(), name='user-list'),
     # path('', include(router.urls)),
     # path('admin/', admin.site.urls),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
