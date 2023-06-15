@@ -8,6 +8,7 @@ Author: Niranjan Kumawat
 COMMUNITIES_MASTER_TABLE = "communities_master"
 CATEGORIES_MASTER_TABLE = "categories_master"
 SOURCES_MASTER_TABLE = "sources_master"
+VALUES_MASTER_TABLE = "values_master"
 
 
 # Fields
