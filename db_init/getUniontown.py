@@ -29,8 +29,6 @@ import uuid
 from datetime import datetime
 import pandas as pd
 import National.genNationalData as national
-# import getStateData
-# import getLocalData
 import psycopg2
 from populateDB import populateDB, checkMasterTables
 import os

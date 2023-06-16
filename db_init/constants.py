@@ -15,3 +15,6 @@ VALUES_MASTER_TABLE = "values_master"
 CATEGORY_FIELD = "category"
 SOURCE_TYPE_FIELD = "source_type"
 COMMUNITY_GEO_ID_FIELD = "community_geo_id"
+
+# Environment Variables
+DB_URI_ENV = "DB_URI"
