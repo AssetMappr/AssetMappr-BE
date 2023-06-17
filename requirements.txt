@@ -3,4 +3,6 @@ djangorestframework
 django-cors-headers
 drf-yasg
 pylint
-psycopg2
+psycopg2-binary
+requests
+pandas
