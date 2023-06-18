@@ -4,6 +4,7 @@ This file contains utilities specific to google apis.
 Author: Niranjan Kumawat
 """
 import json
+import pandas as pd
 import requests
 
 from db_init.constants import GOOGLE_API_KEY
@@ -20,7 +21,7 @@ def get_address_coordinates(address: str) -> tuple:
       Returns:
           (latitude, longitude, place_id) (tuple): If found, a tuple of latitude,
           longitude, and place_id for given address, otherwise None.
-      """
+    """
     params = {"key": GOOGLE_API_KEY, "address": address}
     url = "https://maps.googleapis.com/maps/api/geocode/json?"
     response = requests.get(url=url, params=params, timeout=(3.05, 27))
