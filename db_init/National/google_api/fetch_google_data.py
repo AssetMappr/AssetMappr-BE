@@ -149,8 +149,12 @@ def fetch_assets(
         data = data.append([df], ignore_index=True)
 
     data = data.drop(data.loc[data["price_level"] >= 1].index)
-    data = data.loc[:, data.columns.isin(
-        ['latitude', 'longitude', 'address', 'asset_name', 'place_id', 'category'])]
+    data = data.loc[:, data.columns.isin(['latitude',
+                                          'longitude',
+                                          'address',
+                                          'asset_name',
+                                          'place_id',
+                                          'category'])]
 
     websites = {"place_id": [], "website": []}
     for place_id in data["place_id"]:
