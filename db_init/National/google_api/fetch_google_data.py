@@ -17,7 +17,7 @@ import time
 import requests
 import json
 
-from db_init.constants import GOOGLE_API_KEY
+from db_init.constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS
 
 
 def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
@@ -102,11 +102,11 @@ def get_location_website(place_id: str, fields: list):
     response = requests.get(url, params)
     result = json.loads(response.text)
 
-    if result["status"] in ["REQUEST_DENIED"]:
+    if result["status"] in [REQUEST_DENIED_STATUS]:
         print("Check the google API key!")
         return pd.DataFrame()  # Default empty response
 
-    if result["status"] == "OK":
+    if result["status"] == OK_STATUS:
         return pd.json_normalize(result['result'])
 
     # Error occurred

@@ -20,3 +20,7 @@ VALUES_MASTER_TABLE = "values_master"
 CATEGORY_FIELD = "category"
 SOURCE_TYPE_FIELD = "source_type"
 COMMUNITY_GEO_ID_FIELD = "community_geo_id"
+
+# Response status
+OK_STATUS = "OK"
+REQUEST_DENIED_STATUS = "REQUEST_DENIED"

@@ -7,7 +7,7 @@ import json
 import pandas as pd
 import requests
 
-from db_init.constants import GOOGLE_API_KEY
+from db_init.constants import GOOGLE_API_KEY, REQUEST_DENIED_STATUS, OK_STATUS
 
 
 def get_address_coordinates(address: str) -> tuple:
@@ -27,11 +27,11 @@ def get_address_coordinates(address: str) -> tuple:
     response = requests.get(url=url, params=params, timeout=(3.05, 27))
     result = json.loads(response.text)
 
-    if result["status"] in ["REQUEST_DENIED"]:
+    if result["status"] in [REQUEST_DENIED_STATUS]:
         print("Check the google API key!")
         return None
 
-    if result["status"] == "OK":
+    if result["status"] == OK_STATUS:
         results = result["results"][0]
         latitude = results["geometry"]["location"]["lat"]
         longitude = results["geometry"]["location"]["lng"]
