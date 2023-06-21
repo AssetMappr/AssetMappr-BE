@@ -114,7 +114,7 @@ def get_location_website(place_id: str, fields: list):
     return pd.DataFrame()  # Default empty response
 
 
-def fetch_assets(
+def fetch_google_data(
         keywords_file: str,
         latitude: float,
         longitude: float,

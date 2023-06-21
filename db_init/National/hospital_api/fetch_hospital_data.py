@@ -13,7 +13,7 @@ import json
 from db_init.national.google_api.utils import get_address_coordinates
 
 
-def fetch_assets(state_code: str, county_fips: str):
+def fetch_hospitals_data(state_code: str, county_fips: str):
     """
       Fetches hospital asset information from hospital API.
       API reference: https://www.communitybenefitinsight.org/?page=info.data_api
