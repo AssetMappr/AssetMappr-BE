@@ -17,12 +17,9 @@ import json
 from db_init.national.google_api.utils import get_address_coordinates
 
 
-def fetch_schools_data(state_code: str, county_fips: str):
+def fetch_schools_data(state_code: str, county_fips: str, county_name: str):
     """
-      Fetches hospital asset information from hospital API.
-      API reference: https://www.communitybenefitinsight.org/?page=info.data_api
-
-      For specific hospital info: api/get_hospital_data.php?hospital_id=1000
+      Fetches schools data from 3 shools API.
 
       Parameters:
           state_code(str): 2 character state postal code parameter to return
@@ -30,9 +27,14 @@ def fetch_schools_data(state_code: str, county_fips: str):
           county_fips(str): Federal Information Processing System (FIPS) Codes
           for States and Counties.
           Def- https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt
+          county_name(str): The name of the county
 
       Returns:
           data_frame(dataframe): Dataframe with data
       """
     data = ""
+
+    # TODO: Private
+    # TODO: Public
+    # TODO: College
     return data
