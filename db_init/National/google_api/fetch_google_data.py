@@ -165,8 +165,8 @@ def fetch_assets(
             websites["website"].append(result.at[0, "website"])
 
     df = pd.DataFrame.from_dict(websites)
-    data = data.join(df.set_index("place_id"), on="place_ied")
-    data.drop(columns="place_d", in_place=True)
+    data = data.join(df.set_index("place_id"), on="place_id")
+    data.drop(columns="place_id", in_place=True)
 
     # Drop duplicates
     data = data.drop_duplicates()
@@ -175,7 +175,7 @@ def fetch_assets(
     data["source_type"] = "Google API"
 
     # Add a description field
-    # TODO: Figure out a way to get this from API
+    # TODO: If possible, figure out a way to get this from API
     data["description"] = ""
 
     return data
