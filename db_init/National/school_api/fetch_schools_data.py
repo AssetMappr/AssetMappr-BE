@@ -145,7 +145,10 @@ def fetch_post_sec_schools(county_fips: str):
         return df
 
 
-def fetch_schools_data(state_code: str, county_fips: str, county_name: str):
+def fetch_schools_asset_data(
+        state_code: str,
+        county_fips: str,
+        county_name: str):
     """
       Fetches schools data from 3 schools API.
 
