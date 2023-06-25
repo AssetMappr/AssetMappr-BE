@@ -9,7 +9,7 @@ website information to the places which have a website.
 
 Finally, the file outputs a .csv file that contains Google API data.
 
-Author: Niranjan Kumawat
+Author: Jameson Carter, Niranjan Kumawat
 """
 
 import pandas as pd
