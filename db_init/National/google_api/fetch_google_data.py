@@ -144,6 +144,9 @@ def fetch_google_asset_data(
         print("Either no keyword file name or wrong format provided")
         return
 
+    if not GOOGLE_API_KEY:
+        print("Google API Key not set")
+
     data = pd.DataFrame()
 
     for (category, keyword) in zip(categories[1:], keywords[1:]):
