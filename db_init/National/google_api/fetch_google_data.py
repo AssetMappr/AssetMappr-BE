@@ -132,13 +132,17 @@ def fetch_google_asset_data(
       Returns:
           data_frame(dataframe): Dataframe with data
       """
-    with open(keywords_file, 'r') as kf:
+    with open(f"./keywords/{keywords_file}", 'r') as kf:
         keywords = []
         categories = []
         for line in kf:
             line = line.split(',')
             categories.appned(line[0])
             keywords.append(line[1])
+
+    if not keywords:
+        print("Either no keyword file name or wrong format provided")
+        return
 
     data = pd.DataFrame()
 

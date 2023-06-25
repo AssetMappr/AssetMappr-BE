@@ -163,26 +163,18 @@ def fetch_schools_asset_data(
       Returns:
           data_frame(dataframe): Dataframe with data
       """
-    data = pd.DataFrame(
-        columns=[
-            "asset_name",
-            "category",
-            "description",
-            "address",
-            "latitude",
-            "longitude"])
     df_private = fetch_private_schools(county_fips)
     df_public = fetch_public_schools(state_code, county_name)
     df_post_sec = fetch_post_sec_schools(county_fips)
-    data = pd.concat([data, df_private, df_public, df_post_sec])
+    data = pd.concat([df_private, df_public, df_post_sec])
 
     data["source_type"] = "NCES Common Core of Data API"
     data["asset_name"] = data["asset_name"].str.title()
 
-    print("If any of these searches yield no results, make sure your county "
-          "names, county codes, and state codes are correct")
-    print(f"Found {df_private.shape[0]} private schools")
-    print(f"Found {df_public.shape[0]} public schools")
-    print(f"Found {df_post_sec.shape[0]} post-secondary schools")
+    # print("If any of these searches yield no results, make sure your county "
+    #       "names, county codes, and state codes are correct")
+    # print(f"Found {df_private.shape[0]} private schools")
+    # print(f"Found {df_public.shape[0]} public schools")
+    # print(f"Found {df_post_sec.shape[0]} post-secondary schools")
 
     return data

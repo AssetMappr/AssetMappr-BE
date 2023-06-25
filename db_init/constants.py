@@ -10,10 +10,11 @@ DB_URI_ENV = "DB_URI"
 GOOGLE_API_KEY = os.getenv("G_API_KEY")
 
 # DB tables
-COMMUNITIES_MASTER_TABLE = "communities"
-CATEGORIES_MASTER_TABLE = "categories"
-SOURCES_MASTER_TABLE = "sources"
-VALUES_MASTER_TABLE = "values"
+# Master tables
+COMMUNITIES_TABLE = "communities"
+ASSET_CATEGORIES_TABLE = "asset_categories"
+SOURCES_TABLE = "sources"
+RATING_VALUES_TABLE = "rating_values"
 
 
 # Fields
@@ -24,3 +25,7 @@ COMMUNITY_GEO_ID_FIELD = "community_geo_id"
 # Response status
 OK_STATUS = "OK"
 REQUEST_DENIED_STATUS = "REQUEST_DENIED"
+
+# Values
+# Asset related
+TANGIBLE_ASSET = "Tangible"
