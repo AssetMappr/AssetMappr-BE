@@ -10,10 +10,10 @@ DB_URI_ENV = "DB_URI"
 GOOGLE_API_KEY = os.getenv("G_API_KEY")
 
 # DB tables
-COMMUNITIES_MASTER_TABLE = "communities_master"
-CATEGORIES_MASTER_TABLE = "categories_master"
-SOURCES_MASTER_TABLE = "sources_master"
-VALUES_MASTER_TABLE = "values_master"
+COMMUNITIES_MASTER_TABLE = "communities"
+CATEGORIES_MASTER_TABLE = "categories"
+SOURCES_MASTER_TABLE = "sources"
+VALUES_MASTER_TABLE = "values"
 
 
 # Fields
