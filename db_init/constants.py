@@ -29,3 +29,6 @@ REQUEST_DENIED_STATUS = "REQUEST_DENIED"
 # Values
 # Asset related
 TANGIBLE_ASSET = "Tangible"
+
+# Locations
+ASSETS_DATA_LOC = "./data/assets.csv"
