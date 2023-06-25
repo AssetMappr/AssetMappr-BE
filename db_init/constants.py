@@ -6,7 +6,7 @@ Author: Niranjan Kumawat
 import os
 
 # Environment Variables
-DB_URI_ENV = "DB_URI"
+DB_CONN_STRING = os.getenv("DB_CONN_STRING")
 GOOGLE_API_KEY = os.getenv("G_API_KEY")
 
 # DB tables

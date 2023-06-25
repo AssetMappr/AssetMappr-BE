@@ -13,7 +13,7 @@ import json
 from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC
 from db_init.national.fetch_national_assets import fetch_national_assets
 
-if __name__ == "main":
+if __name__ == "__main__":
     # Fetch the configuration file
     CONFIGURATION = None
     with open("./config.json", "r") as cf:
