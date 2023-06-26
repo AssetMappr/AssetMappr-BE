@@ -23,7 +23,7 @@ def check_connection(conn_string: str):
         conn.close()
         return True
     except psycopg2.OperationalError as e:
-        print(f"Error: {e} occurred when establishing a connection "
+        print(f"Exception: {e} occurred when establishing a connection "
               f"using {conn_string}")
         return False
 
@@ -35,37 +35,32 @@ def execute_queries(queries: list):
       Parameters:
           queries(list): List of queries to be executed
     """
-    # TODO Try catch
-    # Establish a connection
-    conn = psycopg2.connect(DB_CONN_STRING)
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-    # Execute a command
-    for query in queries:
-        cur.execute(query)
-    # Make the changes to the database persistent
-    conn.commit()
-    # Close cursor and communication with the database
-    cur.close()
-    # Close connection
-    conn.close()
+    try:
+        # Establish a connection
+        conn = psycopg2.connect(DB_CONN_STRING)
+        # Open a cursor to perform database operations
+        cur = conn.cursor()
+        # Execute a command
+        for query in queries:
+            cur.execute(query)
+        # Make the changes to the database persistent
+        conn.commit()
+        # Close cursor and communication with the database
+        cur.close()
+        # Close connection
+        conn.close()
+    except (psycopg2.OperationalError, psycopg2.DatabaseError) as e:
+        print(f"Exception: {e}")
 
 
-if __name__ == "__main__":
-    # Check if connection string is set or not
-    if not DB_CONN_STRING:
-        print("Environment variable 'DB_CONN_STRING' not set")
-        print("URI Format: dbname=<db_name> user=<user> host=<host> "
-              "password=<secret>")
-        exit()
-    # Check connection
-    if not check_connection(DB_CONN_STRING):
-        print("Problem establishing a connection with database! Exiting")
-        exit()
+def drop_table(tables: list):
+    """
+      Drops a table, if exist, in the tables.
 
-    # Operations
-    # TODO Delete all existing tables
-    # TODO Create new tables
-    # TODO Add base/master tables
-    # TODO Add assets information
-
+      Parameters:
+          tables(list): List of tables to be deleted
+    """
+    queries = []
+    for table in tables:
+        queries.append(f"DROP TABLE IF EXISTS {table} CASCADE;")
+    execute_queries(queries)
