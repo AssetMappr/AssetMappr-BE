@@ -67,15 +67,37 @@ def drop_and_create():
                    "last_name VARCHAR(255),"
                    "mobile VARCHAR(12),"
                    "com_name VARCHAR(255),"
-                   "com_code INT NOT NULL,"
+                   "com_id INT NOT NULL,"
                    "dob DATE NOT NULL,"
                    "ethnicity VARCHAR(100),"
                    "race VARCHAR(50),"
                    "gender VARCHAR(50),"
                    "PRIMARY KEY (u_id),"
                    "FOREIGN KEY (u_id) REFERENCES users (id),"
-                   "FOREIGN KEY (com_code) REFERENCES communities (id)"
+                   "FOREIGN KEY (com_id) REFERENCES communities (id)"
                    ");")
+    # Assets
+    queries.append("CREATE TABLE assets ("
+                   "id BIGSERIAL PRIMARY KEY NOT NULL,"
+                   "name VARCHAR(255) NOT NULL,"
+                   "type VARCHAR(15) CHECK(type IN ('Tangible', 'Intangible')),"
+                   "com_name VARCHAR(255) NOT NULL,"
+                   "com_id INT NOT NULL,"
+                   "source_type INT NOT NULL,"
+                   "source_name VARCHAR(255),"
+                   "category VARCHAR(255) NOT NULL,"
+                   "category_id INT NOT NULL,"
+                   "description TEXT,"
+                   "website TEXT,"
+                   "latitude DOUBLE PRECISION NOT NULL,"
+                   "longitude DOUBLE PRECISION NOT NULL,"
+                   "address TEXT,"
+                   "timestamp TIMESTAMPTZ NOT NULL,"
+                   "status INT CHECK(type IN (0, 1, 2))"
+                   "FOREIGN KEY (com_id) REFERENCES communities (id),"
+                   "FOREIGN KEY (category_id) REFERENCES asset_categories (id)"
+                   ");")
+
     execute_queries(queries)
 
 
