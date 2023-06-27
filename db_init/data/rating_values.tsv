@@ -1,13 +1,13 @@
 value	value_type
-"Needs renovation"	"Negative",
-"Services need improvement"	"Negative",
-"Needs maintenance/clean-up"	"Negative",
-"Physical space should be used differently"	"Negative",
-"Harmful for the community"	"Negative",
-"Good for family/kids"	"Positive",
-"Good for community spirit"	"Positive",
-"Fond memories"	"Positive",
-"Great services provided"	"Positive",
-"Useful in daily life"	"Positive",
-"Visually pleasing or beautiful"	"Positive",
-"Entertaining/fun"	"Positive"
+"Needs renovation"	-1
+"Services need improvement"	-1
+"Needs maintenance/clean-up"	-1
+"Physical space should be used differently"	-1
+"Harmful for the community"	-1
+"Good for family/kids"	1
+"Good for community spirit"	1
+"Fond memories"	1
+"Great services provided"	1
+"Useful in daily life"	1
+"Visually pleasing or beautiful"	1
+"Entertaining/fun"	1

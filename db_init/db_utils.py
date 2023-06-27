@@ -4,8 +4,10 @@ Wrapper functions to use the database.
 Author: Niranjan Kumawat
 """
 import psycopg2
+import psycopg2.extras as extras
+from pandas import DataFrame
 
-from db_init.constants import DB_CONN_STRING
+from constants import DB_CONN_STRING
 
 
 def check_connection(conn_string: str):
@@ -64,3 +66,30 @@ def drop_table(tables: list):
     for table in tables:
         queries.append(f"DROP TABLE IF EXISTS {table} CASCADE;")
     execute_queries(queries)
+
+
+def insert_into(table: str, columns: list, data: DataFrame):
+    """
+      Inserts data into table
+
+      Parameters:
+          table(str): Table name
+          columns(list): Columns for which values are to be added.
+          data(DataFrame): Values corresponding to columns
+    """
+    query = "INSERT INTO %s(%s) VALUES %%s" % (table, ",".join(columns))
+    tuples = [tuple(x) for x in data.to_numpy()]
+    conn = psycopg2.connect(DB_CONN_STRING)
+    cursor = conn.cursor()
+    try:
+        extras.execute_values(cursor, query, tuples)
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(f"Exception occurred: {error}")
+        conn.rollback()
+        cursor.close()
+        return
+
+    print(f"Inserted data to {table}")
+    cursor.close()
+    conn.close()

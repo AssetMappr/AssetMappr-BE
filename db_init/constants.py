@@ -32,3 +32,7 @@ TANGIBLE_ASSET = "Tangible"
 
 # Locations
 ASSETS_DATA_LOC = "./data/assets.csv"
+ASSET_CATEGORIES_LOC = "./data/asset_categories.tsv"
+COMMUNITIES_LOC = "./data/communities.tsv"
+RATING_VALUES_LOC = "./data/rating_values.tsv"
+SOURCES_LOC = "./data/sources.tsv"

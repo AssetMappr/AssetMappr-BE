@@ -3,8 +3,12 @@ Initializes database and populate data.
 
 Author: Niranjan Kumawat
 """
-from db_init.constants import DB_CONN_STRING
-from db_init.db_utils import check_connection, drop_table, execute_queries
+import pandas as pd
+
+from constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
+    ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
+    COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE
+from db_utils import check_connection, drop_table, execute_queries, insert_into
 
 
 def drop_and_create():
@@ -19,7 +23,9 @@ def drop_and_create():
         "profile",
         "assets",
         "asset_updates",
-        "asset_ratings"
+        "asset_ratings",
+        "completed_surveys",
+        "user_surveys"
     ]
     drop_table(tables)
 
@@ -34,13 +40,13 @@ def drop_and_create():
                    ");")
     # Rating Values
     queries.append("CREATE TABLE rating_values ("
-                   "id SERIAL PRIMARY KEY NOT NULL"
+                   "id SERIAL PRIMARY KEY NOT NULL,"
                    "value VARCHAR(255) NOT NULL,"
                    "weight SMALLINT NOT NULL"
                    ");")
     # Communities
     queries.append("CREATE TABLE communities ("
-                   "id BIGSERIAL PRIMARY KEY NOT NULL,"
+                   "geo_id INT PRIMARY KEY NOT NULL,"
                    "name VARCHAR(255) NOT NULL,"
                    "class_code VARCHAR(10),"
                    "latitude DOUBLE PRECISION NOT NULL,"
@@ -52,7 +58,7 @@ def drop_and_create():
                    "name VARCHAR(255) NOT NULL"
                    ");")
 
-    # User
+    # Users
     queries.append("CREATE TABLE users ("
                    "id BIGSERIAL PRIMARY KEY NOT NULL,"
                    "email VARCHAR(255) NOT NULL,"
@@ -67,14 +73,14 @@ def drop_and_create():
                    "last_name VARCHAR(255),"
                    "mobile VARCHAR(12),"
                    "com_name VARCHAR(255),"
-                   "com_id BIGINT NOT NULL,"
+                   "com_geo_id INT NOT NULL,"
                    "dob DATE NOT NULL,"
                    "ethnicity VARCHAR(100),"
                    "race VARCHAR(50),"
                    "gender VARCHAR(50),"
                    "PRIMARY KEY (u_id),"
                    "FOREIGN KEY (u_id) REFERENCES users (id),"
-                   "FOREIGN KEY (com_id) REFERENCES communities (id)"
+                   "FOREIGN KEY (com_geo_id) REFERENCES communities (geo_id)"
                    ");")
     # Assets
     queries.append(
@@ -83,9 +89,10 @@ def drop_and_create():
         "name VARCHAR(255) NOT NULL,"
         "type VARCHAR(15) CHECK(type IN ('Tangible', 'Intangible')),"
         "com_name VARCHAR(255) NOT NULL,"
-        "com_id BIGINT NOT NULL,"
+        "com_geo_id INT NOT NULL,"
         "source_type INT NOT NULL,"
         "source_name VARCHAR(255),"
+        "user_id BIGINT,"
         "category VARCHAR(255) NOT NULL,"
         "category_id INT NOT NULL,"
         "description TEXT,"
@@ -94,15 +101,17 @@ def drop_and_create():
         "longitude DOUBLE PRECISION NOT NULL,"
         "address TEXT,"
         "timestamp TIMESTAMPTZ NOT NULL,"
-        "status INT CHECK(type IN (0, 1, 2))"
-        "FOREIGN KEY (com_id) REFERENCES communities (id),"
-        "FOREIGN KEY (category_id) REFERENCES asset_categories (id)"
+        "status INT CHECK(status IN (0, 1, 2)),"
+        "FOREIGN KEY (com_geo_id) REFERENCES communities (geo_id),"
+        "FOREIGN KEY (category_id) REFERENCES asset_categories (id),"
+        "FOREIGN KEY (source_type) REFERENCES sources (type),"
+        "FOREIGN KEY (user_id) REFERENCES users (id)"
         ");")
     # Asset updates
     queries.append("CREATE TABLE asset_updates ("
                    "id BIGSERIAL PRIMARY KEY NOT NULL,"
                    "asset_id BIGINT NOT NULL,"
-                   "com_id BIGINT NOT NULL,"
+                   "com_geo_id INT NOT NULL,"
                    "name VARCHAR(255),"
                    "description TEXT,"
                    "address TEXT,"
@@ -112,22 +121,22 @@ def drop_and_create():
                    "category VARCHAR(255),"
                    "category_id INT,"
                    "type INT NOT NULL CHECK(type IN (0, 1)),"
-                   "status INT NOT NULL"
+                   "status INT NOT NULL,"
                    "FOREIGN KEY (asset_id) REFERENCES assets (id),"
-                   "FOREIGN KEY (com_id) REFERENCES communities (id)"
+                   "FOREIGN KEY (com_geo_id) REFERENCES communities (geo_id)"
                    ");")
     # Asset ratings
     queries.append("CREATE TABLE asset_ratings ("
                    "id BIGSERIAL PRIMARY KEY NOT NULL,"
                    "asset_id BIGINT NOT NULL,"
-                   "com_id BIGINT NOT NULL,"
+                   "com_geo_id INT NOT NULL,"
                    "user_id BIGINT NOT NULL,"
                    "timestamp TIMESTAMPTZ NOT NULL,"
                    "rating_scale SMALLINT NOT NULL,"
                    "comments TEXT,"
                    "value VARCHAR(255) NOT NULL,"
                    "FOREIGN KEY (asset_id) REFERENCES assets (id),"
-                   "FOREIGN KEY (com_id) REFERENCES communities (id),"
+                   "FOREIGN KEY (com_geo_id) REFERENCES communities (geo_id),"
                    "FOREIGN KEY (user_id) REFERENCES users (id)"
                    ");")
     # Completed surveys
@@ -140,7 +149,7 @@ def drop_and_create():
                    "e_time TIMESTAMPTZ NOT NULL,"
                    "com_name VARCHAR(255) NOT NULL,"
                    "report JSON NOT NULL,"
-                   "report_link TEXT"
+                   "report_link TEXT,"
                    "responses_count INT NOT NULL,"
                    "visibility INT NOT NULL DEFAULT 0,"
                    "PRIMARY KEY (survey_id, planner_id)"
@@ -155,9 +164,38 @@ def drop_and_create():
 
     execute_queries(queries)
 
+
+def populate_base():
+    # Asset Categories - id(auto) | category | description
+    data = pd.read_csv(ASSET_CATEGORIES_LOC, sep='\t', header=0)
+    columns = ["category", "description"]
+    insert_into(ASSET_CATEGORIES_TABLE, columns, data)
+
+    # Rating Values - id(auto) | value | weight
+    data = pd.read_csv(RATING_VALUES_LOC, sep='\t', header=0)
+    columns = ["value", "weight"]
+    insert_into(RATING_VALUES_TABLE, columns, data)
+
+    # Communities - geo_id | name | class_code | latitude | longitude
+    data = pd.read_csv(COMMUNITIES_LOC, sep='\t', header=0)
+    columns = ["geo_id", "name", "class_code", "latitude", "longitude"]
+    insert_into(COMMUNITIES_TABLE, columns, data)
+
+    # Sources - type(auto) | name
+    data = pd.read_csv(SOURCES_LOC, sep='\t', header=0)
+    columns = ["name"]
+    insert_into(SOURCES_TABLE, columns, data)
+
+
+def populate_assets():
+    pass
+
+
 def populate_data():
     # Operations
-    # TODO Add base/master tables
+    # Add base/master tables
+    populate_base()
+
     # TODO Add assets information
     pass
 
