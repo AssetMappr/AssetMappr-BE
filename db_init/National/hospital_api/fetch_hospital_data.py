@@ -3,7 +3,7 @@ This file gets hospitals across the US from the Community Benefit API:
 - About: https://www.communitybenefitinsight.org/?page=info.data_api
 - API: http://www.communitybenefitinsight.org/api/get_hospitals.php
 
-Author: Jameson Carter, Niranjan Kumawat
+Author: Michaela Marincic, Niranjan Kumawat
 """
 
 import pandas as pd
