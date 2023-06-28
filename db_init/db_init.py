@@ -3,7 +3,6 @@ Initializes database and populate data.
 
 Author: Mihir Bhaskar, Niranjan Kumawat
 """
-import argparse
 
 import pandas as pd
 
@@ -250,11 +249,6 @@ if __name__ == "__main__":
     if not check_connection(DB_CONN_STRING):
         print("Problem establishing a connection with database! Exiting")
         exit()
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "train_input", type=str, help="path to training input .tsv file"
-    )
-    args = parser.parse_args()
 
     # Drop and create new tables
     drop_and_create()
