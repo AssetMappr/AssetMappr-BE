@@ -2,4 +2,3 @@
 """
 Initialize this folder as a subdirectory
 """
-
