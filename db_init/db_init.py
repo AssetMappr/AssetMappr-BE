@@ -10,7 +10,12 @@ from constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
     ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
     COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
     ASSETS_DATA_LOC, ASSETS_TABLE
-from db_utils import check_connection, drop_table, execute_queries, insert_into
+from db_utils import check_connection, drop_table, execute_queries, insert_into, \
+    read_all_rows
+
+
+ASSET_CATEGORIES_MAP = {}
+SOURCES_MAP = {}
 
 
 def drop_and_create():
@@ -221,18 +226,39 @@ def populate_assets():
     # user_id | category | category_id | description | website | latitude |
     # longitude | address | timestamp | status
     data = pd.read_csv(ASSETS_DATA_LOC, sep='\t', header=0)
-    # TODO Fetch and check for mapping ids across tables
-    columns = ["name", "type", "com_name", "com_geo_id", "source_type",
-               "source_name", "category", "category_id", "description",
-               "website", "latitude", "longitude", "address", "timestamp",
-               "status"]
+    # Drop rows if source not part of base tables
+    data = data[data["source_name"].isin(SOURCES_MAP.keys())]
+    data["source_type"] = data["source_name"].map(SOURCES_MAP)
+
+    # Drop rows if category not part of base tables
+    data = data[data["category"].isin(ASSET_CATEGORIES_MAP.keys())]
+    data["category_id"] = data["category"].map(ASSET_CATEGORIES_MAP)
+    data.reset_index(drop=True, inplace=True)
+
+    columns = data.columns.tolist()
     insert_into(ASSETS_TABLE, columns, data)
+
+
+def create_map():
+    """
+      Creates map for categories
+    """
+    # Create categories map
+    rows = read_all_rows("asset_categories")
+    for row in rows:
+        ASSET_CATEGORIES_MAP[row[1]] = row[0]
+
+    # Create sources map
+    rows = read_all_rows("sources")
+    for row in rows:
+        SOURCES_MAP[row[1]] = row[0]
 
 
 def populate_data():
     # Operations
     # Add base/master tables
     populate_base()
+    create_map()
 
     #  Add assets information
     populate_assets()

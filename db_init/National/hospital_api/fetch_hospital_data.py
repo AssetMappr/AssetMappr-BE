@@ -10,7 +10,7 @@ import pandas as pd
 import requests
 import json
 
-from db_init.national.google_api.utils import get_address_coordinates
+from national.google_api.utils import get_address_coordinates
 
 
 def fetch_hospitals_asset_data(state_code: str, county_fips: str):

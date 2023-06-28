@@ -8,11 +8,11 @@ Author: Niranjan Kumawat
 """
 import pandas as pd
 
-from db_init.national.google_api.fetch_google_data import \
+from national.google_api.fetch_google_data import \
     fetch_google_asset_data
-from db_init.national.hospital_api.fetch_hospital_data import \
+from national.hospital_api.fetch_hospital_data import \
     fetch_hospitals_asset_data
-from db_init.national.school_api.fetch_schools_data import \
+from national.school_api.fetch_schools_data import \
     fetch_schools_asset_data
 
 

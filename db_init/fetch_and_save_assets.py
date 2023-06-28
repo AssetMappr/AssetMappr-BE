@@ -9,8 +9,8 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 
 from datetime import datetime, timezone
 
-from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
-from db_init.national.fetch_national_assets import fetch_national_assets
+from constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
+from national.fetch_national_assets import fetch_national_assets
 
 if __name__ == "__main__":
     communities = CONFIGURATION["communities"]
@@ -50,9 +50,11 @@ if __name__ == "__main__":
         # TODO De-duplication
         # Basic de-duplication
         asset_data.drop_duplicates(inplace=True)
+        # Drop index
+        asset_data.reset_index(drop=True, inplace=True)
 
         # Save assets before uploading
-        asset_data.to_csv(ASSETS_DATA_LOC, sep='\t')
+        asset_data.to_csv(ASSETS_DATA_LOC, sep='\t', index=False)
         print(f"Assets are saved to {ASSETS_DATA_LOC}")
 
         # TODO

@@ -93,3 +93,34 @@ def insert_into(table: str, columns: list, data: DataFrame):
     print(f"Inserted data to {table}")
     cursor.close()
     conn.close()
+
+
+def read_all_rows(table: str):
+    """
+      Read all rows and columns for given table.
+
+      Parameters:
+          table(str): Table name
+      Returns:
+          Rows [(1, 100, "abcdef"), (2, None, 'dada')], otherwise None
+    """
+    conn = None
+    rows = []
+    try:
+        # Establish a connection
+        conn = psycopg2.connect(DB_CONN_STRING)
+        # Open a cursor to perform database operations
+        cur = conn.cursor()
+        # Execute a command
+        query = f"SELECT * FROM {table};"
+        cur.execute(query)
+        rows = cur.fetchall()
+        # Close cursor and communication with the database
+        cur.close()
+    except (psycopg2.OperationalError, psycopg2.DatabaseError) as e:
+        print(f"Exception: {e}")
+    finally:
+        if conn:
+            # Close connection
+            conn.close()
+        return rows
