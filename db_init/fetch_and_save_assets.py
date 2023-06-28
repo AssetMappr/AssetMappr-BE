@@ -8,17 +8,11 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 """
 
 from datetime import datetime, timezone
-import json
 
-from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC
+from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
 from db_init.national.fetch_national_assets import fetch_national_assets
 
 if __name__ == "__main__":
-    # Fetch the configuration file
-    CONFIGURATION = None
-    with open("./config.json", "r") as cf:
-        CONFIGURATION = json.load(cf)
-
     communities = CONFIGURATION["communities"]
     for community in communities:
         print(f"Adding data for {community['name']}")

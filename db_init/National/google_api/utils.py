@@ -4,10 +4,10 @@ This file contains utilities specific to google apis.
 Author: Niranjan Kumawat
 """
 import json
-import pandas as pd
 import requests
 
-from db_init.constants import GOOGLE_API_KEY, REQUEST_DENIED_STATUS, OK_STATUS
+from db_init.constants import GOOGLE_API_KEY, REQUEST_DENIED_STATUS, OK_STATUS, \
+    GOOGLE_API_GEOCODE
 
 
 def get_address_coordinates(address: str) -> tuple:
@@ -23,8 +23,10 @@ def get_address_coordinates(address: str) -> tuple:
           longitude, and place_id for given address, otherwise None.
     """
     params = {"key": GOOGLE_API_KEY, "address": address}
-    url = "https://maps.googleapis.com/maps/api/geocode/json?"
-    response = requests.get(url=url, params=params, timeout=(3.05, 27))
+    response = requests.get(
+        url=GOOGLE_API_GEOCODE,
+        params=params,
+        timeout=(3.05, 27))
     result = json.loads(response.text)
 
     if result["status"] in [REQUEST_DENIED_STATUS]:

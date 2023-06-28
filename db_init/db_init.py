@@ -8,9 +8,9 @@ import argparse
 import pandas as pd
 
 from constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
-  ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
-  COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
-  ASSETS_DATA_LOC, ASSETS_TABLE
+    ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
+    COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
+    ASSETS_DATA_LOC, ASSETS_TABLE
 from db_utils import check_connection, drop_table, execute_queries, insert_into
 
 
@@ -221,9 +221,12 @@ def populate_assets():
     # Assets - name | type | com_name | com_geo_id | source_type | source_name |
     # user_id | category | category_id | description | website | latitude |
     # longitude | address | timestamp | status
-    # TODO Fetch and check for mapping ids across tables
     data = pd.read_csv(ASSETS_DATA_LOC, sep='\t', header=0)
-    columns = []
+    # TODO Fetch and check for mapping ids across tables
+    columns = ["name", "type", "com_name", "com_geo_id", "source_type",
+               "source_name", "category", "category_id", "description",
+               "website", "latitude", "longitude", "address", "timestamp",
+               "status"]
     insert_into(ASSETS_TABLE, columns, data)
 
 
