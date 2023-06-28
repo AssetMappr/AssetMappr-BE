@@ -1,18 +1,36 @@
 """
 Initializes database and populate data.
 
-Author: Niranjan Kumawat
+Author: Mihir Bhaskar, Niranjan Kumawat
 """
+import argparse
+
 import pandas as pd
 
 from constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
-    ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
-    COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE
+  ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
+  COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
+  ASSETS_DATA_LOC, ASSETS_TABLE
 from db_utils import check_connection, drop_table, execute_queries, insert_into
 
 
 def drop_and_create():
+    """
+      Drops existing tables:
+        1. asset_categories
+        2. rating_values
+        3. communities
+        4. sources
+        5. users
+        6. profile
+        7. assets
+        8. asset_updates
+        9. asset_ratings
+        10. completed_surveys
+        11. user_surveys
 
+        and create same new ones.
+    """
     # Drop all existing tables
     tables = [
         "asset_categories",
@@ -166,6 +184,15 @@ def drop_and_create():
 
 
 def populate_base():
+    """
+      Populates the base tables:
+      1. asset_categories
+      2. rating_values
+      3. communities
+      4. sources
+
+      Data source: './data/*'
+    """
     # Asset Categories - id(auto) | category | description
     data = pd.read_csv(ASSET_CATEGORIES_LOC, sep='\t', header=0)
     columns = ["category", "description"]
@@ -188,7 +215,16 @@ def populate_base():
 
 
 def populate_assets():
-    pass
+    """
+      Populates the asset information at loc './data/assets.tsv'
+    """
+    # Assets - name | type | com_name | com_geo_id | source_type | source_name |
+    # user_id | category | category_id | description | website | latitude |
+    # longitude | address | timestamp | status
+    # TODO Fetch and check for mapping ids across tables
+    data = pd.read_csv(ASSETS_DATA_LOC, sep='\t', header=0)
+    columns = []
+    insert_into(ASSETS_TABLE, columns, data)
 
 
 def populate_data():
@@ -196,8 +232,8 @@ def populate_data():
     # Add base/master tables
     populate_base()
 
-    # TODO Add assets information
-    pass
+    #  Add assets information
+    populate_assets()
 
 
 if __name__ == "__main__":
@@ -211,6 +247,11 @@ if __name__ == "__main__":
     if not check_connection(DB_CONN_STRING):
         print("Problem establishing a connection with database! Exiting")
         exit()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "train_input", type=str, help="path to training input .tsv file"
+    )
+    args = parser.parse_args()
 
     # Drop and create new tables
     drop_and_create()

@@ -4,10 +4,10 @@ Fetches assets from multiple sources, including:
 2. Community Benefit Insight API
 3. EDGE OpenData API
 
-Author: Niranjan Kumawat
+Author: Mihir Bhaskar, Niranjan Kumawat
 """
-import uuid
-from datetime import datetime
+
+from datetime import datetime, timezone
 import json
 
 from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC
@@ -44,17 +44,21 @@ if __name__ == "__main__":
         # Incorporated Place GEOID
         # Sourced from https://geocoding.geo.census.gov/geocoder/geographies
         # /onelineaddress?form
-        national_data["community_geo_id"] = community["communityGeoId"]
-        national_data["asset_id"] = [uuid.uuid4() for _ in
-                                     range(len(national_data.index))]
+        national_data["com_name"] = community["name"]
+        national_data["com_geo_id"] = community["communityGeoId"]
 
-        national_data["asset_type"] = TANGIBLE_ASSET
-        national_data["generated_timestamp"] = datetime.now()
+        national_data["type"] = TANGIBLE_ASSET
+        national_data["timestamp"] = datetime.now(timezone.utc)
+        national_data["status"] = 0
+
         asset_data = national_data  # Add from other sources here
 
         # TODO De-duplication
+        # Basic de-duplication
+        asset_data.drop_duplicates(inplace=True)
+
         # Save assets before uploading
-        asset_data.to_csv(ASSETS_DATA_LOC)
+        asset_data.to_csv(ASSETS_DATA_LOC, sep='\t')
         print(f"Assets are saved to {ASSETS_DATA_LOC}")
 
         # TODO

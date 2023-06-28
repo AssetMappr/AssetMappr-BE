@@ -39,17 +39,17 @@ def fetch_private_schools(county_fips: str):
         df["category"] = "Education and workforce development"
         df["description"] = "Private school"
         df["website"] = ""
-        df.rename(columns={"attributes.NAME": "asset_name",
+        df.rename(columns={"attributes.NAME": "name",
                            "attributes.STREET": "address",
                            "attributes.CITY": "city",
                            "attributes.LAT": "latitude",
                            "attributes.LON": "longitude"}, inplace=True)
         df["address"] = df["address"] + ", " + df["city"]
 
-        return df[["asset_name", "category", "description", "address",
+        return df[["name", "category", "description", "address",
                    "latitude", "longitude", "website"]]
     else:
-        column_names = ["asset_name", "category", "description", "address",
+        column_names = ["name", "category", "description", "address",
                         "latitude", "longitude", "website"]
         df = pd.DataFrame(columns=column_names)
         return df
@@ -85,7 +85,7 @@ def fetch_public_schools(state_code: str, county_name: str):
         df["category"] = "Education and workforce development"
         df["description"] = "Public school"
         df["website"] = ""
-        df.rename(columns={"attributes.SCH_NAME": "asset_name",
+        df.rename(columns={"attributes.SCH_NAME": "name",
                            "attributes.LSTREET1": "address",
                            "attributes.LCITY": "city",
                            "attributes.LATCOD": "latitude",
@@ -93,13 +93,13 @@ def fetch_public_schools(state_code: str, county_name: str):
 
         df["address"] = df["address"] + ", " + df["city"]
 
-        df = df[["asset_name", "category", "description",
+        df = df[["name", "category", "description",
                  "address", "latitude", "longitude", "website"]]
 
         return df
 
     else:  # Otherwise, return empty dataframe
-        column_names = ["asset_name", "category", "description", "address",
+        column_names = ["name", "category", "description", "address",
                         "latitude", "longitude", "website"]
         df = pd.DataFrame(columns=column_names)
         return df
@@ -129,17 +129,17 @@ def fetch_post_sec_schools(county_fips: str):
         df["category"] = "Education and workforce development"
         df["description"] = "Postsecondary school"
         df["website"] = ""
-        df.rename(columns={"attributes.NAME": "asset_name",
+        df.rename(columns={"attributes.NAME": "name",
                            "attributes.STREET": "address",
                            "attributes.CITY": "city",
                            "attributes.LAT": "latitude",
                            "attributes.LON": "longitude"}, inplace=True)
         df["address"] = df["address"] + ", " + df["city"]
 
-        return df[["asset_name", "category", "description", "address",
+        return df[["name", "category", "description", "address",
                    "latitude", "longitude", "website"]]
     else:
-        column_names = ["asset_name", "category", "description", "address",
+        column_names = ["name", "category", "description", "address",
                         "latitude", "longitude", "website"]
         df = pd.DataFrame(columns=column_names)
         return df
@@ -168,8 +168,8 @@ def fetch_schools_asset_data(
     df_post_sec = fetch_post_sec_schools(county_fips)
     data = pd.concat([df_private, df_public, df_post_sec])
 
-    data["source_type"] = "NCES Common Core of Data API"
-    data["asset_name"] = data["asset_name"].str.title()
+    data["source_name"] = "NCES Common Core of Data API"
+    data["name"] = data["name"].str.title()
 
     # print("If any of these searches yield no results, make sure your county "
     #       "names, county codes, and state codes are correct")

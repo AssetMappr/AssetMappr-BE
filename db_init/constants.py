@@ -15,6 +15,8 @@ COMMUNITIES_TABLE = "communities"
 ASSET_CATEGORIES_TABLE = "asset_categories"
 SOURCES_TABLE = "sources"
 RATING_VALUES_TABLE = "rating_values"
+# Other table
+ASSETS_TABLE = "assets"
 
 
 # Fields
@@ -31,7 +33,7 @@ REQUEST_DENIED_STATUS = "REQUEST_DENIED"
 TANGIBLE_ASSET = "Tangible"
 
 # Locations
-ASSETS_DATA_LOC = "./data/assets.csv"
+ASSETS_DATA_LOC = "./data/assets.tsv"
 ASSET_CATEGORIES_LOC = "./data/asset_categories.tsv"
 COMMUNITIES_LOC = "./data/communities.tsv"
 RATING_VALUES_LOC = "./data/rating_values.tsv"

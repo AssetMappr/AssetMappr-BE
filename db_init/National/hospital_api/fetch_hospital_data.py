@@ -33,8 +33,8 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
     url = f"https://www.communitybenefitinsight.org/api/get_hospitals.php?state={state_code}"
     response = requests.get(url)
     data = pd.json_normalize(json.loads(response.text))
-    column_names = ["asset_name", "category", "description", "address",
-                    "latitude", "longitude", "website", "source_type"]
+    column_names = ["name", "category", "description", "address",
+                    "latitude", "longitude", "website", "source_name"]
     if data.empty:
         print(f"No hospital data available for state {state_code}")
         data = pd.DataFrame(columns=column_names)
@@ -47,10 +47,9 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
         data["category"] = "Healthcare"
         data["description"] = "Hospital"
         data["website"] = ""
-        data["source_type"] = "Community Benefit Hospitals API"
+        data["source_name"] = "Community Benefit Hospitals API"
         data["address"] = data["street_address"] + \
             "," + data["city"] + "," + data["state"]
-        data = data.rename(columns={"name": "asset_name"})
 
         lat = []
         long = []

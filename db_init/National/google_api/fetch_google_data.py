@@ -156,12 +156,12 @@ def fetch_google_asset_data(
         data = data.append([df], ignore_index=True)
 
     data = data.drop(data.loc[data["price_level"] >= 1].index)
-    data = data.loc[:, data.columns.isin(['latitude',
-                                          'longitude',
-                                          'address',
-                                          'asset_name',
-                                          'place_id',
-                                          'category'])]
+    data = data.loc[:, data.columns.isin(["latitude",
+                                          "longitude",
+                                          "address",
+                                          "name",
+                                          "place_id",
+                                          "category"])]
 
     websites = {"place_id": [], "website": []}
     for place_id in data["place_id"]:
@@ -179,7 +179,7 @@ def fetch_google_asset_data(
     data = data.drop_duplicates()
 
     # Add source information
-    data["source_type"] = "Google API"
+    data["source_name"] = "Google API"
 
     # Add a description field
     # TODO: If possible, figure out a way to get this from API
