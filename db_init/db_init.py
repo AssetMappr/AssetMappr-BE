@@ -4,8 +4,8 @@ Initializes database and populate data.
 Author: Mihir Bhaskar, Niranjan Kumawat
 """
 
-import pandas as pd
 import sys
+import pandas as pd
 
 from db_init.constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
     ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \

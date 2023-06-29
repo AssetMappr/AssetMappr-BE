@@ -10,9 +10,9 @@ Finally, the file outputs a .csv file that contains all of the school data
 Author: Jameson Carter, Niranjan Kumawat
 """
 
+import json
 import pandas as pd
 import requests
-import json
 
 
 def fetch_private_schools(county_fips: str):

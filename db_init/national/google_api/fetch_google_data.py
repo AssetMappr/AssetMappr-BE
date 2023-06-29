@@ -147,6 +147,7 @@ def fetch_google_asset_data(
 
     if not GOOGLE_API_KEY:
         print("Google API Key not set")
+        return
 
     data = pd.DataFrame()
 
