@@ -7,8 +7,10 @@ Author: Shashank Shekhar
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
+
 # from django.contrib import admin
 from django.urls import path, include
+
 # from django.conf.urls import url
 # from assets import views
 router = routers.DefaultRouter()
@@ -18,7 +20,7 @@ router = routers.DefaultRouter()
 SchemaView = get_schema_view(
     openapi.Info(
         title="AssetMappr APIs",
-        default_version='v1',
+        default_version="v1",
         description="Version 1 API for AssetMappr. ",
         terms_of_service="https://www.ourapp.com/policies/terms/",
         contact=openapi.Contact(email="assetmappr@andrew.cmu.edu"),
@@ -26,21 +28,20 @@ SchemaView = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-APP_NAME = 'api'
+APP_NAME = "api"
 urlpatterns = [
-    path('api/', include(('assets.urls'))),
+    # Include the URLs from the user app
+    path("api/user/", include("user.urls")),
+    # Include the URLs from the product app
+    path("api/assets/", include("assets.urls")),
     path(
-        '',
-        SchemaView.with_ui(
-            'swagger',
-            cache_timeout=0),
-        name='schema-swagger-ui'),
+        "api/swagger/",
+        SchemaView.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
     path(
-        'redoc/',
-        SchemaView.with_ui(
-            'redoc',
-            cache_timeout=0),
-        name='schema-redoc'),
+        "api/redoc/", SchemaView.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+    ),
     # path('users/', views.AssetsView.as_view(), name='user-list'),
     # path('', include(router.urls)),
     # path('admin/', admin.site.urls),
