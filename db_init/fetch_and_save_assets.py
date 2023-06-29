@@ -29,11 +29,9 @@ if __name__ == "__main__":
         # Fetch national assets
         national_data = fetch_national_assets(
             state_code,
-            county_fips,
-            county_name,
+            (county_fips, county_name),
             keywords_filename,
-            latitude,
-            longitude,
+            (latitude, longitude),
             radius)
         # Incorporated Place GEOID
         # Sourced from https://geocoding.geo.census.gov/geocoder/geographies

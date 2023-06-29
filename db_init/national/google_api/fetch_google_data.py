@@ -131,7 +131,7 @@ def fetch_google_asset_data(
           radius(int): Radius to cover
 
       Returns:
-          data_frame(dataframe): Dataframe with data
+          data_frame(dataframe): Dataframe with data, otherwise empty
       """
     with open(f"./keywords/{keywords_file}", 'r') as keyword_file:
         keywords = []
@@ -141,15 +141,15 @@ def fetch_google_asset_data(
             categories.appned(line[0])
             keywords.append(line[1])
 
+    data = pd.DataFrame()
+
     if not keywords:
         print("Either no keyword file name or wrong format provided")
-        return
+        return data
 
     if not GOOGLE_API_KEY:
         print("Google API Key not set")
-        return
-
-    data = pd.DataFrame()
+        return data
 
     for (category, keyword) in zip(categories[1:], keywords[1:]):
         dataframe = get_map_data(keyword, latitude, longitude, radius)

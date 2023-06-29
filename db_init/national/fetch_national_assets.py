@@ -18,11 +18,9 @@ from db_init.national.school_api.fetch_schools_data import \
 
 def fetch_national_assets(
         state_code: str,
-        county_fips: str,
-        county_name: str,
+        county_details: tuple,
         keywords_filename: str,
-        latitude: float,
-        longitude: float,
+        coordinates: tuple,
         radius: int):
     """
       Checks if communities, source_type, and categories in data is present in
@@ -30,17 +28,16 @@ def fetch_national_assets(
 
       Parameters:
           state_code(str): 2 character state postal code
-          county_fips(float): Federal Information Processing System (FIPS) Codes
-          county_name(float): The County name
+          county_details(tuple): FIPS, County name
           keywords_filename(str): File name at './national/google_api/keywords/*'
-          latitude(float): The latitude
-          longitude(float): The longitude
+          coordinates(tuple): latitude, longitude
           radius(int): Radius to cover
 
       Returns:
           data_frame(dataframe): Dataframe with data
     """
-
+    (county_fips, county_name) = county_details
+    (latitude, longitude) = coordinates
     # Asset information extracted using keywords from Google API
     df_google = fetch_google_asset_data(
         keywords_filename, latitude, longitude, radius)
