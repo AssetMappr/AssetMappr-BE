@@ -86,7 +86,7 @@ def insert_into(table: str, columns: list, data: DataFrame):
     try:
         extras.execute_values(cursor, query, tuples)
         conn.commit()
-    except (Exception, psycopg2.DatabaseError) as exception:
+    except (psycopg2.OperationalError, psycopg2.DatabaseError) as exception:
         print(f"Exception occurred: {exception}")
         conn.rollback()
         cursor.close()
@@ -125,4 +125,4 @@ def read_all_rows(table: str):
         if conn:
             # Close connection
             conn.close()
-        return rows
+    return rows
