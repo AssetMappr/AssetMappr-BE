@@ -9,8 +9,8 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 
 from datetime import datetime, timezone
 
-from constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
-from national.fetch_national_assets import fetch_national_assets
+from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
+from db_init.national.fetch_national_assets import fetch_national_assets
 
 if __name__ == "__main__":
     communities = CONFIGURATION["communities"]

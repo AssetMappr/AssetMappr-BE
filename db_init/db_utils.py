@@ -7,7 +7,7 @@ import psycopg2
 import psycopg2.extras as extras
 from pandas import DataFrame
 
-from constants import DB_CONN_STRING
+from db_init.constants import DB_CONN_STRING
 
 
 def check_connection(conn_string: str):

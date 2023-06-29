@@ -17,7 +17,7 @@ import time
 import requests
 import json
 
-from constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
+from db_init.constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
     GOOGLE_API_PLACE_NEARBY_SEARCH, GOOGLE_API_PLACE_DETAILS
 
 

@@ -6,12 +6,12 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 
 import pandas as pd
 
-from constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
+from db_init.constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
     ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
     COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
     ASSETS_DATA_LOC, ASSETS_TABLE
-from db_utils import check_connection, drop_table, execute_queries, insert_into, \
-    read_all_rows
+from db_init.db_utils import check_connection, drop_table, execute_queries, \
+  insert_into, read_all_rows
 
 
 ASSET_CATEGORIES_MAP = {}
