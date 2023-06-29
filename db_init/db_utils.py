@@ -4,7 +4,7 @@ Wrapper functions to use the database.
 Author: Niranjan Kumawat
 """
 import psycopg2
-import psycopg2.extras as extras
+from psycopg2 import extras
 from pandas import DataFrame
 
 from db_init.constants import DB_CONN_STRING
@@ -24,9 +24,10 @@ def check_connection(conn_string: str):
         conn = psycopg2.connect(f"{conn_string} connect_timeout=1")
         conn.close()
         return True
-    except psycopg2.OperationalError as e:
-        print(f"Exception: {e} occurred when establishing a connection "
-              f"using {conn_string}")
+    except psycopg2.OperationalError as exception:
+        print(
+            f"Exception: {exception} occurred when establishing a connection "
+            f"using {conn_string}")
         return False
 
 
@@ -51,8 +52,8 @@ def execute_queries(queries: list):
         cur.close()
         # Close connection
         conn.close()
-    except (psycopg2.OperationalError, psycopg2.DatabaseError) as e:
-        print(f"Exception: {e}")
+    except (psycopg2.OperationalError, psycopg2.DatabaseError) as exception:
+        print(f"Exception: {exception}")
 
 
 def drop_table(tables: list):
@@ -77,15 +78,16 @@ def insert_into(table: str, columns: list, data: DataFrame):
           columns(list): Columns for which values are to be added.
           data(DataFrame): Values corresponding to columns
     """
-    query = "INSERT INTO %s(%s) VALUES %%s" % (table, ",".join(columns))
+    columns = ",".join(columns)
+    query = f"INSERT INTO {table}({columns}) VALUES %%s"
     tuples = [tuple(x) for x in data.to_numpy()]
     conn = psycopg2.connect(DB_CONN_STRING)
     cursor = conn.cursor()
     try:
         extras.execute_values(cursor, query, tuples)
         conn.commit()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(f"Exception occurred: {error}")
+    except (Exception, psycopg2.DatabaseError) as exception:
+        print(f"Exception occurred: {exception}")
         conn.rollback()
         cursor.close()
         return
@@ -117,8 +119,8 @@ def read_all_rows(table: str):
         rows = cur.fetchall()
         # Close cursor and communication with the database
         cur.close()
-    except (psycopg2.OperationalError, psycopg2.DatabaseError) as e:
-        print(f"Exception: {e}")
+    except (psycopg2.OperationalError, psycopg2.DatabaseError) as exception:
+        print(f"Exception: {exception}")
     finally:
         if conn:
             # Close connection

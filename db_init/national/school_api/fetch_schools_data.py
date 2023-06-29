@@ -33,26 +33,26 @@ def fetch_private_schools(county_fips: str):
 
     response = requests.get(url, timeout=5)
     result = json.loads(response.text)
-    df = pd.json_normalize(result["features"])
+    dataframe = pd.json_normalize(result["features"])
 
-    if not df.empty:
-        df["category"] = "Education and workforce development"
-        df["description"] = "Private school"
-        df["website"] = ""
-        df.rename(columns={"attributes.NAME": "name",
-                           "attributes.STREET": "address",
-                           "attributes.CITY": "city",
-                           "attributes.LAT": "latitude",
-                           "attributes.LON": "longitude"}, inplace=True)
-        df["address"] = df["address"] + ", " + df["city"]
+    if not dataframe.empty:
+        dataframe["category"] = "Education and workforce development"
+        dataframe["description"] = "Private school"
+        dataframe["website"] = ""
+        dataframe.rename(columns={"attributes.NAME": "name",
+                                  "attributes.STREET": "address",
+                                  "attributes.CITY": "city",
+                                  "attributes.LAT": "latitude",
+                                  "attributes.LON": "longitude"}, inplace=True)
+        dataframe["address"] = dataframe["address"] + ", " + dataframe["city"]
 
-        return df[["name", "category", "description", "address",
-                   "latitude", "longitude", "website"]]
-    else:
-        column_names = ["name", "category", "description", "address",
-                        "latitude", "longitude", "website"]
-        df = pd.DataFrame(columns=column_names)
-        return df
+        return dataframe[["name", "category", "description", "address",
+                          "latitude", "longitude", "website"]]
+
+    column_names = ["name", "category", "description", "address",
+                    "latitude", "longitude", "website"]
+    dataframe = pd.DataFrame(columns=column_names)
+    return dataframe
 
 
 def fetch_public_schools(state_code: str, county_name: str):
@@ -63,7 +63,10 @@ def fetch_public_schools(state_code: str, county_name: str):
           state_code(str): 2 character state postal code parameter to return
           hospitals within the provided state.
           county_name(str): 2 character state postal code parameter to return
-          hospitals within the provided state. Check https://data-nces.opendata.arcgis.com/datasets/nces::public-school-characteristics-2019-20/explore?location=36.667912%2C-96.401190%2C16.00 for exact names.
+          hospitals within the provided state. Check 'https://data-nces.
+          opendata.arcgis.com/datasets/nces::public-school-characteristics-
+          2019-20/explore?location=36.667912%2C-96.401190%2C16.00'
+          for exact names.
 
         Returns:
             data_frame(dataframe): Dataframe with data
@@ -78,31 +81,34 @@ def fetch_public_schools(state_code: str, county_name: str):
     # Call the EDGE OpenData API
     response = requests.get(url, timeout=5)
     result = json.loads(response.text)
-    df = pd.json_normalize(
+    dataframe = pd.json_normalize(
         result["features"])  # normalize json file into pandas
 
-    if not df.empty:  # If there ARE results, continue
-        df["category"] = "Education and workforce development"
-        df["description"] = "Public school"
-        df["website"] = ""
-        df.rename(columns={"attributes.SCH_NAME": "name",
-                           "attributes.LSTREET1": "address",
-                           "attributes.LCITY": "city",
-                           "attributes.LATCOD": "latitude",
-                           "attributes.LONCOD": "longitude"}, inplace=True)
+    if not dataframe.empty:  # If there ARE results, continue
+        dataframe["category"] = "Education and workforce development"
+        dataframe["description"] = "Public school"
+        dataframe["website"] = ""
+        dataframe.rename(
+            columns={
+                "attributes.SCH_NAME": "name",
+                "attributes.LSTREET1": "address",
+                "attributes.LCITY": "city",
+                "attributes.LATCOD": "latitude",
+                "attributes.LONCOD": "longitude"},
+            inplace=True)
 
-        df["address"] = df["address"] + ", " + df["city"]
+        dataframe["address"] = dataframe["address"] + ", " + dataframe["city"]
 
-        df = df[["name", "category", "description",
-                 "address", "latitude", "longitude", "website"]]
+        dataframe = dataframe[["name", "category", "description",
+                               "address", "latitude", "longitude", "website"]]
 
-        return df
+        return dataframe
 
-    else:  # Otherwise, return empty dataframe
-        column_names = ["name", "category", "description", "address",
-                        "latitude", "longitude", "website"]
-        df = pd.DataFrame(columns=column_names)
-        return df
+    # Otherwise, return empty dataframe
+    column_names = ["name", "category", "description", "address",
+                    "latitude", "longitude", "website"]
+    dataframe = pd.DataFrame(columns=column_names)
+    return dataframe
 
 
 def fetch_post_sec_schools(county_fips: str):
@@ -123,26 +129,24 @@ def fetch_post_sec_schools(county_fips: str):
 
     response = requests.get(url, timeout=5)
     result = json.loads(response.text)
-    df = pd.json_normalize(result["features"])
+    dataframe = pd.json_normalize(result["features"])
 
-    if not df.empty:
-        df["category"] = "Education and workforce development"
-        df["description"] = "Postsecondary school"
-        df["website"] = ""
-        df.rename(columns={"attributes.NAME": "name",
-                           "attributes.STREET": "address",
-                           "attributes.CITY": "city",
-                           "attributes.LAT": "latitude",
-                           "attributes.LON": "longitude"}, inplace=True)
-        df["address"] = df["address"] + ", " + df["city"]
+    if not dataframe.empty:
+        dataframe["category"] = "Education and workforce development"
+        dataframe["description"] = "Postsecondary school"
+        dataframe["website"] = ""
+        dataframe.rename(columns={"attributes.NAME": "name",
+                                  "attributes.STREET": "address",
+                                  "attributes.CITY": "city",
+                                  "attributes.LAT": "latitude",
+                                  "attributes.LON": "longitude"}, inplace=True)
+        dataframe["address"] = dataframe["address"] + ", " + dataframe["city"]
 
-        return df[["name", "category", "description", "address",
-                   "latitude", "longitude", "website"]]
-    else:
-        column_names = ["name", "category", "description", "address",
-                        "latitude", "longitude", "website"]
-        df = pd.DataFrame(columns=column_names)
-        return df
+        return dataframe[["name", "category", "description", "address",
+                          "latitude", "longitude", "website"]]
+    column_names = ["name", "category", "description", "address",
+                    "latitude", "longitude", "website"]
+    return pd.DataFrame(columns=column_names)
 
 
 def fetch_schools_asset_data(

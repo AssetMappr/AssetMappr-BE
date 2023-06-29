@@ -5,10 +5,9 @@ This file gets hospitals across the US from the Community Benefit API:
 
 Author: Michaela Marincic, Niranjan Kumawat
 """
-
+import json
 import pandas as pd
 import requests
-import json
 
 from db_init.national.google_api.utils import get_address_coordinates
 
@@ -51,15 +50,15 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
         data["address"] = data["street_address"] + \
             "," + data["city"] + "," + data["state"]
 
-        lat = []
-        long = []
+        latitudes = []
+        longitudes = []
         for i in data["address"]:
-            la, lo, _ = get_address_coordinates(i)[0]
-            lat.append(la)
-            long.append(lo)
+            latitude, longitude, _ = get_address_coordinates(i)[0]
+            latitudes.append(latitude)
+            longitudes.append(longitude)
 
-        data["latitude"] = lat
-        data["longitude"] = long
+        data["latitude"] = latitudes
+        data["longitude"] = longitudes
         data = data[column_names]
 
     return data

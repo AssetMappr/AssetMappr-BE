@@ -11,11 +11,10 @@ Finally, the file outputs a .csv file that contains Google API data.
 
 Author: Jameson Carter, Michaela Marincic, Niranjan Kumawat
 """
-
-import pandas as pd
-import time
-import requests
 import json
+import time
+import pandas as pd
+import requests
 
 from db_init.constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
     GOOGLE_API_PLACE_NEARBY_SEARCH, GOOGLE_API_PLACE_DETAILS
@@ -57,23 +56,25 @@ def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
         response = requests.get(
             GOOGLE_API_PLACE_NEARBY_SEARCH, params, timeout=10)
         result = json.loads(response.text)
-        df = pd.json_normalize(result['results'])
+        dataframe = pd.json_normalize(result['results'])
         # Separate the address from the city, first add commas to strings
         # without them so that we can use str.split()
-        df = df.loc[:,
-                    df.columns.isin(['geometry.location.lat',
-                                     'geometry.location.lng',
-                                     'vicinity',
-                                     'name',
-                                     'place_id',
-                                     'price_level',
-                                     ])]
+        dataframe = dataframe.loc[:,
+                                  dataframe.columns.isin(['geometry.location.lat',
+                                                          'geometry.location.lng',
+                                                          'vicinity',
+                                                          'name',
+                                                          'place_id',
+                                                          'price_level',
+                                                          ])]
         # Rename to make everything simpler
-        df = df.rename(columns={"geometry.location.lat": "latitude",
-                                "geometry.location.lng": "longitude",
-                                "vicinity": "address"})
+        dataframe = dataframe.rename(
+            columns={
+                "geometry.location.lat": "latitude",
+                "geometry.location.lng": "longitude",
+                "vicinity": "address"})
         # Merge dataframes
-        res_dataframe = pd.concat([res_dataframe, df])
+        res_dataframe = pd.concat([res_dataframe, dataframe])
         if "next_page_token" in result:
             params["pagetoken"] = result['next_page_token']
             # Need to introduce this so that API call ready for token
@@ -132,10 +133,10 @@ def fetch_google_asset_data(
       Returns:
           data_frame(dataframe): Dataframe with data
       """
-    with open(f"./keywords/{keywords_file}", 'r') as kf:
+    with open(f"./keywords/{keywords_file}", 'r') as keyword_file:
         keywords = []
         categories = []
-        for line in kf:
+        for line in keyword_file:
             line = line.split(',')
             categories.appned(line[0])
             keywords.append(line[1])
@@ -150,10 +151,10 @@ def fetch_google_asset_data(
     data = pd.DataFrame()
 
     for (category, keyword) in zip(categories[1:], keywords[1:]):
-        df = get_map_data(keyword, latitude, longitude, radius)
-        df["category"] = category
+        dataframe = get_map_data(keyword, latitude, longitude, radius)
+        dataframe["category"] = category
 
-        data = data.append([df], ignore_index=True)
+        data = data.append([dataframe], ignore_index=True)
 
     data = data.drop(data.loc[data["price_level"] >= 1].index)
     data = data.loc[:, data.columns.isin(["latitude",
@@ -171,8 +172,8 @@ def fetch_google_asset_data(
             websites["place_id"].append(place_id)
             websites["website"].append(result.at[0, "website"])
 
-    df = pd.DataFrame.from_dict(websites)
-    data = data.join(df.set_index("place_id"), on="place_id")
+    dataframe = pd.DataFrame.from_dict(websites)
+    data = data.join(dataframe.set_index("place_id"), on="place_id")
     data.drop(columns="place_id", in_place=True)
 
     # Drop duplicates

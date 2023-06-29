@@ -5,13 +5,14 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 """
 
 import pandas as pd
+import sys
 
 from db_init.constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
     ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
     COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
     ASSETS_DATA_LOC, ASSETS_TABLE
 from db_init.db_utils import check_connection, drop_table, execute_queries, \
-  insert_into, read_all_rows
+    insert_into, read_all_rows
 
 
 ASSET_CATEGORIES_MAP = {}
@@ -255,6 +256,9 @@ def create_map():
 
 
 def populate_data():
+    """
+      Populates base data and asset data from files at './data/*'
+    """
     # Operations
     # Add base/master tables
     populate_base()
@@ -270,11 +274,11 @@ if __name__ == "__main__":
         print("Environment variable 'DB_CONN_STRING' not set")
         print("URI Format: dbname=<db_name> user=<user> host=<host> "
               "password=<secret>")
-        exit()
+        sys.exit()
     # Check connection
     if not check_connection(DB_CONN_STRING):
         print("Problem establishing a connection with database! Exiting")
-        exit()
+        sys.exit()
 
     # Drop and create new tables
     drop_and_create()
