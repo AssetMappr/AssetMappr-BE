@@ -54,7 +54,8 @@ def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
             "keyword": keyword,
             "radius": radius
         }
-        response = requests.get(GOOGLE_API_PLACE_NEARBY_SEARCH, params)
+        response = requests.get(
+            GOOGLE_API_PLACE_NEARBY_SEARCH, params, timeout=10)
         result = json.loads(response.text)
         df = pd.json_normalize(result['results'])
         # Separate the address from the city, first add commas to strings
@@ -98,7 +99,7 @@ def get_location_website(place_id: str, fields: list):
         "key": GOOGLE_API_KEY,
         "place_id": place_id,
         "fields": ",".join(fields)}
-    response = requests.get(GOOGLE_API_PLACE_DETAILS, params)
+    response = requests.get(GOOGLE_API_PLACE_DETAILS, params, timeout=10)
     result = json.loads(response.text)
 
     if result["status"] in [REQUEST_DENIED_STATUS]:

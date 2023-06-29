@@ -26,7 +26,7 @@ def get_address_coordinates(address: str) -> tuple:
     response = requests.get(
         url=GOOGLE_API_GEOCODE,
         params=params,
-        timeout=(3.05, 27))
+        timeout=10)
     result = json.loads(response.text)
 
     if result["status"] in [REQUEST_DENIED_STATUS]:

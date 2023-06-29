@@ -31,7 +31,7 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
           data_frame(dataframe): Dataframe with data
       """
     url = f"https://www.communitybenefitinsight.org/api/get_hospitals.php?state={state_code}"
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     data = pd.json_normalize(json.loads(response.text))
     column_names = ["name", "category", "description", "address",
                     "latitude", "longitude", "website", "source_name"]

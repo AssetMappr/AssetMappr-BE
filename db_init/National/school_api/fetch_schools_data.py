@@ -31,7 +31,7 @@ def fetch_private_schools(county_fips: str):
           f"D%20\'{county_fips}\'&outFields=NAME,STREET,CITY,LAT," \
           f"LON&outSR=4326&f=json"
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     result = json.loads(response.text)
     df = pd.json_normalize(result["features"])
 
@@ -76,7 +76,7 @@ def fetch_public_schools(state_code: str, county_name: str):
           f"STABR&outSR=4326&f=json"
 
     # Call the EDGE OpenData API
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     result = json.loads(response.text)
     df = pd.json_normalize(
         result["features"])  # normalize json file into pandas
@@ -121,7 +121,7 @@ def fetch_post_sec_schools(county_fips: str):
           f"/query?where=CNTY%20%3D%20'{county_fips}'&outFields=NAME,STREET," \
           f"CITY,LAT,LON&outSR=4326&f=json"
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     result = json.loads(response.text)
     df = pd.json_normalize(result["features"])
 
