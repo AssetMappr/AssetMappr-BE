@@ -54,7 +54,7 @@ def de_duplication(data: DataFrame, cols: list):
     # -duplicate-locations-in-a-pandas-dataframe
 
     # Basic de-duplication
-    data = data.drop_duplicates()
+    data = data.drop_duplicates(subset=cols)
 
     return data
 
