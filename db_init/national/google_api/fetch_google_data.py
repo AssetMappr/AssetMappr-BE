@@ -139,7 +139,7 @@ def fetch_google_asset_data(
         categories = []
         for line in kw_file:
             line = line.split(',')
-            categories.appned(line[0])
+            categories.append(line[0])
             keywords.append(line[1])
 
     data = pd.DataFrame()

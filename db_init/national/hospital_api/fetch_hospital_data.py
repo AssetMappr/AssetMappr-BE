@@ -9,6 +9,7 @@ import json
 import pandas as pd
 import requests
 
+from db_init.constants import HOSPITAL_API
 from db_init.national.google_api.utils import get_address_coordinates
 
 
@@ -28,9 +29,9 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
 
       Returns:
           data_frame(dataframe): Dataframe with data
-      """
-    url = f"https://www.communitybenefitinsight.org/api/get_hospitals.php?state={state_code}"
-    response = requests.get(url, timeout=5)
+    """
+    params = {"state": state_code}
+    response = requests.get(HOSPITAL_API, params, timeout=5)
     data = pd.json_normalize(json.loads(response.text))
     column_names = ["name", "category", "description", "address",
                     "latitude", "longitude", "website", "source_name"]

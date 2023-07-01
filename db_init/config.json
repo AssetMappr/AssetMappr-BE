@@ -27,5 +27,6 @@
     "placeDetails": "https://maps.googleapis.com/maps/api/place/details/json?",
     "placeNearbySearch": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?",
     "geocode": "https://maps.googleapis.com/maps/api/geocode/json?"
-  }
+  },
+  "hospitalAPI": "https://www.communitybenefitinsight.org/api/get_hospitals.php?"
 }

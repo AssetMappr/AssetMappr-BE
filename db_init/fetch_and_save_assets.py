@@ -14,12 +14,13 @@ from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
 from db_init.national.fetch_national_assets import fetch_national_assets
 
 
-def de_duplication(data: DataFrame):
+def de_duplication(data: DataFrame, cols: list):
     """
       Handling duplicate information in data.
 
       Parameters:
           data(DataFrame): Dataframe with duplicate information
+          cols(list): Columns considered for de-duplication
 
       Returns:
           De-duplicated dataframe
@@ -53,7 +54,9 @@ def de_duplication(data: DataFrame):
     # -duplicate-locations-in-a-pandas-dataframe
 
     # Basic de-duplication
-    data.drop_duplicates(inplace=True)
+    data = data.drop_duplicates()
+
+    return data
 
 
 if __name__ == "__main__":
@@ -88,6 +91,16 @@ if __name__ == "__main__":
         national_data["status"] = 0
 
         asset_data = national_data  # Add from other sources here
+
+        # Handling duplicate information
+        asset_data = de_duplication(asset_data,
+                                    ["name",
+                                     "category",
+                                     "description",
+                                     "address",
+                                     "latitude",
+                                     "longitude",
+                                     "website"])
 
         # Drop index
         asset_data.reset_index(drop=True, inplace=True)
