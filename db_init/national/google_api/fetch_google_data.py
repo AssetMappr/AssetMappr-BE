@@ -78,7 +78,8 @@ def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
         if "next_page_token" in result:
             params["pagetoken"] = result['next_page_token']
             # Need to introduce this so that API call ready for token
-            time.sleep(2)  # TODO: Determine good number for delay
+            print("Waiting for next page token to generate.")
+            time.sleep(5)
         else:
             break
     res_dataframe = res_dataframe.reset_index(drop=True)
@@ -184,7 +185,6 @@ def fetch_google_asset_data(
     data["source_name"] = "Google API"
 
     # Add a description field
-    # TODO: If possible, figure out a way to get this from API
     data["description"] = ""
 
     return data
