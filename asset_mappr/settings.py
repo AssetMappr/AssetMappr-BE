@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
+from decouple import config
 from datetime import timedelta
 from pathlib import Path
 
@@ -21,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7ohn3+896-evxn%dr+!4e@fnf+zqg%9nnd$mdg4ojdg9zafrsq"
-
+SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -88,11 +88,11 @@ WSGI_APPLICATION = "asset_mappr.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "AssetMappr",
-        "USER": "postgres",
+        "NAME": config("DBNAME"),
+        "USER": config("USER"),
         "PASSWORD": "",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "HOST": config("HOST"),
+        "PORT": config("PORT"),
     }
 }
 
@@ -133,9 +133,9 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=15
+        days=1
     ),  # Adjust the token lifetime as per your requirements
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days == 5),
 }
 
 # Internationalization

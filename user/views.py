@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import AllowAny
 
 # ...
 
@@ -111,4 +112,51 @@ class LoginView(APIView):
         else:
             return Response(
                 {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+
+class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "refresh_token": openapi.Schema(type=openapi.TYPE_STRING),
+            },
+        ),
+        responses={
+            status.HTTP_200_OK: openapi.Response(
+                description="Token refreshed successfully",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "access_token": openapi.Schema(type=openapi.TYPE_STRING),
+                    },
+                ),
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description="Invalid request",
+            ),
+        },
+    )
+    def post(self, request):
+        refresh_token = request.data.get("refresh_token")
+
+        # Attempt to verify and refresh the token
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+
+            response_data = {
+                "access_token": access_token,
+            }
+
+            # Return the new access token in the response
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception:
+            # Handle invalid or expired refresh tokens
+            return Response(
+                {"error": "Invalid refresh token"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
