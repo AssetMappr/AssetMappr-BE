@@ -5,12 +5,14 @@ Author: Shashank Shekhar
 """
 
 from rest_framework.response import Response
+
 # from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
 
 from .models import Asset
 from .serializer import AssetSerializer
+
 # from drf_yasg.utils import swagger_auto_schema
 
 
@@ -37,9 +39,7 @@ class AssetsView(APIView):
         """
         data = Asset.objects.all()
 
-        serializer = AssetSerializer(
-            data, context={
-                'request': request}, many=True)
+        serializer = AssetSerializer(data, context={"request": request}, many=True)
 
         return Response(serializer.data)
 
@@ -61,6 +61,7 @@ class AssetsView(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # @api_view(['GET', 'POST'])
 # def asset_list(request):
