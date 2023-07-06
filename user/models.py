@@ -1,13 +1,16 @@
+"""User Manager models"""
 # models.py
-
+import base64
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 import bcrypt
-import base64
 
 
 class UserManager(BaseUserManager):
+    """User manager class"""
+
     def create_user(self, email, password=None, **extra_fields):
+        """Creating user"""
         if not email:
             raise ValueError("The Email field must be set")
 
@@ -18,6 +21,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """Creating superuser"""
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -25,6 +29,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    """User class"""
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     salt = models.CharField(max_length=255)
@@ -35,6 +40,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ["email"]
 
     def set_password(self, raw_password):
+        """Password set function"""
         salt = bcrypt.gensalt()
         salt_str = base64.b64encode(salt).decode(
             "ascii"
@@ -45,19 +51,23 @@ class User(AbstractBaseUser):
         self.salt = salt_str
 
     def check_password(self, raw_password):
+        """Password check function"""
         hashed_password = bcrypt.hashpw(
             raw_password.encode(), base64.b64decode(self.salt.encode())
         )
         return self.password == hashed_password.decode()
 
     def __str__(self):
-        return self.email
+        """Return user email"""
+        return str(self.email)
 
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
+        """DB table for user"""
         db_table = "User"
 
 
 class UserInfo(models.Model):
+    """User Info model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="info")
     name = models.CharField(max_length=255)
     designation = models.CharField(max_length=255)
@@ -69,10 +79,13 @@ class UserInfo(models.Model):
     ethnicity = models.CharField(max_length=255)
     race = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
+
     # Add other fields as needed
 
     def __str__(self):
-        return self.name
+        """Return username"""
+        return str(self.name)
 
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
+        """Table for user info"""
         db_table = "UserInfo"

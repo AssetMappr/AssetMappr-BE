@@ -1,9 +1,9 @@
+"""Urls file"""
 from django.urls import path
-from . import views
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
+from . import views
 
 APP_NAME = "user"
 urlpatterns = [

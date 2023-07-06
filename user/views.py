@@ -1,19 +1,23 @@
-from .models import User
-from .serializers import UserSerializer
+"""User views"""
+# pylint: skip-file
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
+from .models import User
+from .serializers import UserSerializer
+
 
 # ...
 
 
 class SignupView(APIView):
+    """Signup view"""
+
     @swagger_auto_schema(
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
@@ -32,6 +36,7 @@ class SignupView(APIView):
         },
     )
     def post(self, request):
+        """Signup view"""
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data["email"]
@@ -53,6 +58,8 @@ class SignupView(APIView):
 
 
 class LoginView(APIView):
+    """Login view"""
+
     @swagger_auto_schema(
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
@@ -84,6 +91,7 @@ class LoginView(APIView):
         },
     )
     def post(self, request):
+        """Login view"""
         email = request.data.get("email")
         password = request.data.get("password")
 
@@ -116,6 +124,7 @@ class LoginView(APIView):
 
 
 class RefreshTokenView(APIView):
+    """RefreshToken view"""
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
@@ -141,6 +150,7 @@ class RefreshTokenView(APIView):
         },
     )
     def post(self, request):
+        """Refresh view"""
         refresh_token = request.data.get("refresh_token")
 
         # Attempt to verify and refresh the token
