@@ -26,5 +26,11 @@ sudo usermod -aG docker $(whoami)
 > - AWS_EC2_HOST=<instance_ip>
 > - AWS_EC2_USER=<instance_user>
 > - AWS_PRIVATE_KEY=<private_key>
+> - SECRET_KEY=<app_secret_key>
+> - DB_NAME=<postgreSQL_db_name> 
+> - DB_USER=<db_user> 
+> - DB_PWD=<db_pwd> 
+> - DB_HOST=<db_host>
+> - DB_PORT=<db_port>
 
 6. Branch out a release branch from main branch with pattern 'release/dev/*'

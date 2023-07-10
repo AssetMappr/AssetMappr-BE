@@ -29,11 +29,17 @@ jobs:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
           USER_NAME : ${{ secrets.AWS_EC2_USER  }}
+          SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PWD: ${{ secrets.DB_PWD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
         run: |
           echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy code to remote repo
-          env | grep -E 'CONTAINER|IMAGE|APP' > env_vars.txt
+          env | grep -E 'CONTAINER|IMAGE|APP|SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT' > env_vars.txt
           scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
           # Copy code to remote repo
           scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
@@ -44,5 +50,5 @@ jobs:
             docker rm $CONTAINER || true
             cd $APP
             docker build -t $IMAGE .
-            docker run -d -p 80:80 --name $CONTAINER $IMAGE
+            docker run -d -p 80:80 --env-file env_vars.txt --name $CONTAINER $IMAGE
           '
