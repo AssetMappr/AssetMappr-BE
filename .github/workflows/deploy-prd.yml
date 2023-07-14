@@ -1,0 +1,77 @@
+name: Deploy FE to EC2 - Production
+
+on:
+  push:
+    branches:
+      - 'release/prd/**'
+
+# Permission can be added at job level or workflow level
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Deployment version
+        run: |
+          echo "Deploying version: ${{ github.sha }}"
+
+      - name: Set Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      # AWS Actions
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        env:
+          ACTIONS_STEP_DEBUG: true
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+          role-session-name: GitHubActionSession
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push Docker image to Amazon ECR
+        id: build-image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.ECR_REPO }}
+          IMAGE_TAG: "FE-PRD-${{ steps.vars.outputs.sha_short }}"
+        run: |
+          cd simple-app          
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # TODO: Find a way to authenticate instance to ecr. Or use ECS
+      - name: Deploy container to Amazon EC2
+        env:
+          CONTAINER: "BE-PRD-CONTAINER"
+          IMAGE: ${{ steps.build-image.outputs.image }}
+          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+          HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
+          USER_NAME : ${{ secrets.AWS_EC2_USER  }}
+        run: |
+          echo "Deploying image: $IMAGE"
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          # Copy enviroment variabes
+          env | grep -E 'CONTAINER|IMAGE' > env_vars.txt
+          scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
+          # Connect to your EC2 instance via SSH and run Docker commands          
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            source env_vars.txt
+            echo "In instance, deploying: $IMAGE"
+            docker stop $CONTAINER || true
+            docker rm $CONTAINER || true
+            docker pull $IMAGE
+            docker run -d --name $CONTAINER -p 80:80 $IMAGE
+          '
