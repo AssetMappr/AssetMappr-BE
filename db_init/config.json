@@ -1,0 +1,32 @@
+{
+  "communities": [
+    {
+      "communityGeoId": 4250408,
+      "countyFIPS": "42125",
+      "countyName": "Washington County",
+      "keywordsFileName": "monongahela.csv",
+      "latitude": 40.1955304,
+      "longitude": -79.9222298,
+      "name": "Monongahela",
+      "radius": 6000,
+      "stateCode": "PA"
+    },
+    {
+      "communityGeoId": 4278528,
+      "countyFIPS": "42051",
+      "countyName": "Fayette County",
+      "keywordsFileName": "uniontown.csv",
+      "latitude": 39.8993024,
+      "longitude": -79.7245287,
+      "name": "Uniontown",
+      "radius": 6000,
+      "stateCode": "PA"
+    }
+  ],
+  "googleAPIs": {
+    "placeDetails": "https://maps.googleapis.com/maps/api/place/details/json?",
+    "placeNearbySearch": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?",
+    "geocode": "https://maps.googleapis.com/maps/api/geocode/json?"
+  },
+  "hospitalAPI": "https://www.communitybenefitinsight.org/api/get_hospitals.php?"
+}
