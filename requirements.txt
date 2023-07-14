@@ -6,3 +6,6 @@ pylint
 psycopg2-binary
 requests
 pandas
+bcrypt==3.2.0
+python-decouple
+djangorestframework-simplejwt

@@ -10,7 +10,7 @@ from assets import views
 
 # router.register(r'api/assets', views.AssetsView.as_view())
 # router.register(r'api/assets/1', views.asset_detail, basename='api')
-APP_NAME = 'assets'
+APP_NAME = "assets"
 urlpatterns = [
-    path('assets/', views.AssetsView.as_view(), name='asset-list'),
+    path("", views.AssetsView.as_view(), name="asset-list"),
 ]
