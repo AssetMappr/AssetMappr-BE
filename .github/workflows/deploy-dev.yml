@@ -50,5 +50,5 @@ jobs:
             docker rm $CONTAINER || true
             cd $APP
             docker build -t $IMAGE .
-            docker run -d -p 80:80 --env-file env_vars.txt --name $CONTAINER $IMAGE
+            docker run -d -p 80:8000 --env-file env_vars.txt --name $CONTAINER $IMAGE
           '
