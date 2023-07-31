@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Activate virtual environment 
+. venv/bin/activate
+
 # Migrate database
 python manage.py migrate --no-input
 

@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   asset_mappr_service:
@@ -11,7 +11,8 @@ services:
     ports:
       - "8000:8000"
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
     volumes:
       - static:/static
     ports:

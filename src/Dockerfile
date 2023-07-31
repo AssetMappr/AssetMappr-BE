@@ -14,11 +14,11 @@ ENV PYTHONUNBUFFERED 1
 COPY . /app/
 COPY ./entrypoint.sh /
 
-# Upgrade pip
-RUN python -m pip install --upgrade pip
-
 # Install the required dependencies
-RUN pip install -r requirements.txt
+RUN python -m venv venv && \
+    . venv/bin/activate && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Expose the port on which the Django server will run
 EXPOSE 8000
