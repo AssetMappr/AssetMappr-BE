@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 try:
     SECRET_KEY = os.getenv("SECRET_KEY")
 except KeyError as key_exc:
-    raise RuntimeError("Missing SECRET_KEY in environment")
+    raise key_exc("Missing SECRET_KEY in environment")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'True'==os.getenv('DEBUG', default='False')
+DEBUG = 'True' == os.getenv('DEBUG', default='False')
 
 ALLOWED_HOSTS = ['*']
 
@@ -163,7 +163,7 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SWAGGER_SETTINGS = {
-   'USE_SESSION_AUTH': True
+    'USE_SESSION_AUTH': True
 }
 
 # Logging Configuration
@@ -180,7 +180,8 @@ logging.config.dictConfig({
     'disable_existing_loggers': False,
     'formatters': {
         'console': {
-            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s',
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] \
+                %(module)s %(process)d %(thread)d %(message)s',
         },
     },
     'handlers': {

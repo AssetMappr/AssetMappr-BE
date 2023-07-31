@@ -7,17 +7,8 @@
 
 1. Launch a t2.micro instance. (Create new of use existing key - .pem file)
 2. Grant HTTP inbound access permission to 0.0.0.0/0 
-3. ssh to instance
-```bash
-ssh -o StrictHostKeyChecking=no -i <private_key> <user>@<ip>
-```
-4. Install docker
-```bash
-curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
-# Provide permissions to docker command
-sudo usermod -aG docker $(whoami)
-```
-5. Add/Update variables and secrets (Current Repo -> Settings -> Security -> Secrets and Variables -> Actions)
+3. Connect RDS to EC2 using SGs.
+4. Add/Update variables and secrets (Current Repo -> Settings -> Security -> Secrets and Variables -> Actions)
 
 > Variables
 > - APP_NAME=AssetMappr-BE
