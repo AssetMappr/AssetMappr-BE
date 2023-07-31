@@ -28,7 +28,7 @@ except KeyError as key_exc:
     raise RuntimeError("Missing SECRET_KEY in environment")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', default=False)
+DEBUG = 'True'==os.getenv('DEBUG', default='False')
 
 ALLOWED_HOSTS = ['*']
 

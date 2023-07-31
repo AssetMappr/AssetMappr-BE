@@ -24,6 +24,7 @@ sudo usermod -aG docker $(whoami)
 > - DB_NAME=<postgreSQL_db_name> 
 > - DB_HOST=<db_host>
 > - DB_PORT=<db_port>
+> - DEBUG=<application_debug_flag>
 > 
 > Secrets
 > 
