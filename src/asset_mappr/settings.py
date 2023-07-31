@@ -26,6 +26,7 @@ try:
     SECRET_KEY = os.getenv("SECRET_KEY")
 except KeyError as key_exc:
     raise RuntimeError("Missing SECRET_KEY in environment")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', default=False)
 
@@ -94,7 +95,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", default='db-user'),
         "PASSWORD": os.getenv("DB_PWD", default='password'),
         "HOST": os.getenv("DB_HOST", default='127.0.0.1'),
-        "PORT": os.getenv("DB_PORT", default=5432),
+        "PORT": 5432,
     }
 }
 
