@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  asset_mappr_service:
+  asset_mappr_be_service:
     volumes:
       - static:/static
     env_file:
       - .env
     build: 
-      context: ./src
+      context: ./../src
     ports:
       - "8000:8000"
   nginx:
@@ -18,7 +18,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - asset_mappr_service
+      - asset_mappr_be_service
 
 volumes:
   static:
