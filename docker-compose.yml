@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  asset_mappr_service:
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    build: 
+      context: ./src
+    ports:
+      - "8000:8000"
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - asset_mappr_service
+
+volumes:
+  static:
