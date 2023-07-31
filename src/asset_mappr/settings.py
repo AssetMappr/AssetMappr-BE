@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 try:
     SECRET_KEY = os.getenv("SECRET_KEY")
 except KeyError as key_exc:
-    raise key_exc("Missing SECRET_KEY in environment")
+    raise RuntimeError("Missing SECRET_KEY in environment") from key_exc
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'True' == os.getenv('DEBUG', default='False')
