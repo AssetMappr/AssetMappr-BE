@@ -23,8 +23,6 @@ jobs:
 
       - name: Deploy code to Amazon EC2 instance
         env:
-          CONTAINER: "BE-DEV-CONTAINER"
-          IMAGE: "${{ vars.APP_NAME }}-${{ steps.vars.outputs.sha_short }}:latest"
           APP: ${{ vars.APP_NAME }}
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
@@ -35,20 +33,22 @@ jobs:
           DB_PWD: ${{ secrets.DB_PWD }}
           DB_HOST: ${{ vars.DB_HOST }}
           DB_PORT: ${{ vars.DB_PORT }}
+          DEBUG: ${{ vars.DEBUG }}
         run: |
           echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy code to remote repo
-          env | grep -E 'CONTAINER|IMAGE|APP|SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT' > env_vars.txt
+          env | grep -E 'APP|SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
           scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
           # Copy code to remote repo
           scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-            source env_vars.txt
-            docker stop $CONTAINER || true
-            docker rm $CONTAINER || true
-            cd $APP
-            docker build -t $IMAGE .
-            docker run -d -p 80:80 --env-file env_vars.txt --name $CONTAINER $IMAGE
+            sudo apt-get update
+            curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+            sudo usermod -aG docker $(whoami)
+            newgrp docker
+            cd $APP/deployment        
+            chmod 555 dev-deploy.sh
+            ./dev-deploy.sh
           '

@@ -35,12 +35,12 @@ urlpatterns = [
     # Include the URLs from the product app
     path("api/assets/", include("assets.urls")),
     path(
-        "api/swagger/",
+        "api/swagger",
         SchemaView.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
     path(
-        "api/redoc/", SchemaView.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+        "api/redoc", SchemaView.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
     # path('users/', views.AssetsView.as_view(), name='user-list'),
     # path('', include(router.urls)),

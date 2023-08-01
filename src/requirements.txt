@@ -9,3 +9,4 @@ pandas
 bcrypt==3.2.0
 python-decouple
 djangorestframework-simplejwt
+gunicorn
