@@ -39,8 +39,9 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy code to remote repo
+          ls
           scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
-          # Copy code to remote repo
+          # Copy environment variables
           env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
           scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:
           # Connect to your EC2 instance via SSH and run Docker commands          
