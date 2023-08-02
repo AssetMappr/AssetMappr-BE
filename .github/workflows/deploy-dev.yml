@@ -26,8 +26,8 @@ jobs:
 
       - name: Deploy code to Amazon EC2 instance
         env:
-          APP: ${{ vars.APP_NAME }}
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+          SECRET_KEY: ${{ secrets.APP_SECRET_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
           USER_NAME : ${{ secrets.AWS_EC2_USER  }}
           DB_NAME: ${{ vars.DB_NAME }}
@@ -45,7 +45,7 @@ jobs:
           # Copy code to remote repo          
           scp -o StrictHostKeyChecking=no -i private_key -r ./* ${USER_NAME}@${HOSTNAME}:~/backend/.
           # Copy environment variables
-          env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
+          env | grep -E 'SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
           scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:~/backend/deployment/.
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
