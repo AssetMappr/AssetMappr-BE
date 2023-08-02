@@ -46,14 +46,13 @@ jobs:
           scp -o StrictHostKeyChecking=no -i private_key -r ./* ${USER_NAME}@${HOSTNAME}:~/backend/.
           # Copy environment variables
           env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
-          scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:
+          scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:~/backend/deployment/.
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             sudo apt-get update
             curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             sudo usermod -aG docker $(whoami)
             newgrp docker
-            mv .env backend/deployment/.
             cd backend/deployment        
             chmod 555 dev-deploy.sh
             ./dev-deploy.sh
