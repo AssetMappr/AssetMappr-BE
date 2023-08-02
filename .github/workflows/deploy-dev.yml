@@ -53,7 +53,7 @@ jobs:
             curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             sudo usermod -aG docker $(whoami)
             newgrp docker
-            sudo apt  install docker-compose
+            sudo apt  install --yes docker-compose
             cd backend/deployment        
             chmod 555 dev-deploy.sh
             ./dev-deploy.sh
