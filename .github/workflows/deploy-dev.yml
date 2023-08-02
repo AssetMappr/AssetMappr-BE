@@ -43,7 +43,7 @@ jobs:
             mkdir backend
           '
           # Copy code to remote repo          
-          scp -o StrictHostKeyChecking=no -i private_key -r ./ ${USER_NAME}@${HOSTNAME}:~/backend/.
+          scp -o StrictHostKeyChecking=no -i private_key -r ./* ${USER_NAME}@${HOSTNAME}:~/backend/.
           # Copy environment variables
           env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
           scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:
