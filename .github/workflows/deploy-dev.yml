@@ -1,9 +1,12 @@
-name: Deploy FE to EC2 - Development
+name: Deploy BE to EC2 - Development
 
 on:
   push:
     branches:
       - 'release/dev/**'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -27,7 +30,6 @@ jobs:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
           USER_NAME : ${{ secrets.AWS_EC2_USER  }}
-          SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
           DB_NAME: ${{ vars.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PWD: ${{ secrets.DB_PWD }}
@@ -38,7 +40,7 @@ jobs:
           echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy code to remote repo
-          env | grep -E 'APP|SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
+          env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
           scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
           # Copy code to remote repo
           scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
