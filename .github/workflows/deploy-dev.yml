@@ -53,8 +53,8 @@ jobs:
             curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             sudo usermod -aG docker $(whoami)
             newgrp docker
-            mv .env $APP/deployment/.
-            cd $APP/deployment        
+            mv .env backend/deployment/.
+            cd backend/deployment        
             chmod 555 dev-deploy.sh
             ./dev-deploy.sh
           '
