@@ -37,19 +37,19 @@ jobs:
           DB_PORT: ${{ vars.DB_PORT }}
           DEBUG: ${{ vars.DEBUG }}
         run: |
-          echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy code to remote repo
-          env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
-          scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
-          # Copy code to remote repo
           scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
+          # Copy code to remote repo
+          env | grep -E 'APP|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
+          scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             sudo apt-get update
             curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             sudo usermod -aG docker $(whoami)
             newgrp docker
+            mv .env $APP/deployment/.
             cd $APP/deployment        
             chmod 555 dev-deploy.sh
             ./dev-deploy.sh
