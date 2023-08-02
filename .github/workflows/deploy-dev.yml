@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - 'release/dev/**'
-  pull_request:
-    branches:
-      - main
 
 jobs:
   deploy:
