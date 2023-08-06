@@ -10,8 +10,8 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 from datetime import datetime, timezone
 from pandas import DataFrame
 
-from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
-from db_init.national.fetch_national_assets import fetch_national_assets
+from constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
+from national.fetch_national_assets import fetch_national_assets
 
 
 def de_duplication(data: DataFrame, cols: list):

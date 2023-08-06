@@ -9,8 +9,8 @@ import json
 import pandas as pd
 import requests
 
-from db_init.constants import HOSPITAL_API
-from db_init.national.google_api.utils import get_address_coordinates
+from constants import HOSPITAL_API
+from national.google_api.utils import get_address_coordinates
 
 
 def fetch_hospitals_asset_data(state_code: str, county_fips: str):
@@ -54,7 +54,8 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
         latitudes = []
         longitudes = []
         for i in data["address"]:
-            latitude, longitude, _ = get_address_coordinates(i)[0]
+            print(get_address_coordinates(i))
+            latitude, longitude, _ = get_address_coordinates(i)
             latitudes.append(latitude)
             longitudes.append(longitude)
 
