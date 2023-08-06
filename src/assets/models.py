@@ -22,3 +22,7 @@ class Asset(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    class Meta:
+        """Table for user info"""
+        db_table = "assets"
