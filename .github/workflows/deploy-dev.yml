@@ -1,4 +1,4 @@
-name: Deploy FE to EC2 - Development
+name: Deploy BE to EC2 - Development
 
 on:
   push:
@@ -23,11 +23,10 @@ jobs:
 
       - name: Deploy code to Amazon EC2 instance
         env:
-          APP: ${{ vars.APP_NAME }}
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+          SECRET_KEY: ${{ secrets.APP_SECRET_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
           USER_NAME : ${{ secrets.AWS_EC2_USER  }}
-          SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
           DB_NAME: ${{ vars.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PWD: ${{ secrets.DB_PWD }}
@@ -35,20 +34,24 @@ jobs:
           DB_PORT: ${{ vars.DB_PORT }}
           DEBUG: ${{ vars.DEBUG }}
         run: |
-          echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          # Copy code to remote repo
-          env | grep -E 'APP|SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
-          scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
-          # Copy code to remote repo
-          scp -o StrictHostKeyChecking=no -i private_key -r ${{ vars.APP_NAME }} ${USER_NAME}@${HOSTNAME}:
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            rm -rf backend
+            mkdir backend
+          '
+          # Copy code to remote repo          
+          scp -o StrictHostKeyChecking=no -i private_key -r ./* ${USER_NAME}@${HOSTNAME}:~/backend/.
+          # Copy environment variables
+          env | grep -E 'SECRET_KEY|DB_NAME|DB_USER|DB_PWD|DB_HOST|DB_PORT|DEBUG' > .env
+          scp -o StrictHostKeyChecking=no -i private_key .env ${USER_NAME}@${HOSTNAME}:~/backend/deployment/.
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             sudo apt-get update
             curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
             sudo usermod -aG docker $(whoami)
             newgrp docker
-            cd $APP/deployment        
+            sudo apt  install --yes docker-compose
+            cd backend/deployment        
             chmod 555 dev-deploy.sh
             ./dev-deploy.sh
           '

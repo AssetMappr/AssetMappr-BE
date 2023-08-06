@@ -7,8 +7,7 @@
 
 1. Launch a t2.micro instance. (Create new of use existing key - .pem file)
 2. Grant HTTP inbound access permission to 0.0.0.0/0 
-3. Connect RDS to EC2 using SGs.
-4. Add/Update variables and secrets (Current Repo -> Settings -> Security -> Secrets and Variables -> Actions)
+3. Add/Update variables and secrets (Current Repo -> Settings -> Security -> Secrets and Variables -> Actions)
 
 > Variables
 > - APP_NAME=AssetMappr-BE
@@ -25,6 +24,8 @@
 > - SECRET_KEY=<app_secret_key>
 > - DB_USER=<db_user> 
 > - DB_PWD=<db_pwd> 
+
+If already configured, just update the AWS_EC2_HOST to new instance's public IP.
 
 6. Branch out a release branch from main branch with pattern 'release/dev/*'
 
