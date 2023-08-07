@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class Users(AbstractBaseUser):
     """User class"""
     id = models.BigAutoField(primary_key=True,
                              verbose_name="User ID")
@@ -116,17 +116,15 @@ class UserProfile(models.Model):
     
 
     # Relations
-    user = models.OneToOneField("User", 
+    # one-to-one
+    user = models.OneToOneField("Users", 
                                 on_delete=models.CASCADE, 
                                 related_name="profile")
-    community = models.OneToOneField("assets.Communities", 
-                                     null=True,
-                                     on_delete=models.SET_NULL,
-                                     related_name="community")
-
-    # def __str__(self):
-    #     """Return username"""
-    #     return str(self.name)
+    # many(user)-to-one(community)
+    # Delete all users if a community is deleted 
+    community = models.ForeignKey("assets.Communities", 
+                                  on_delete=models.CASCADE,
+                                  related_name="profile_of_community")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Table for user info"""

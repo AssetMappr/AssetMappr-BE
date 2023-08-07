@@ -93,7 +93,7 @@ class Communities(models.Model):
     objects = models.Manager()
 
     class Meta:
-        """Table for assets"""
+        """Table for communities"""
         db_table = "communities"
 
 
@@ -115,11 +115,11 @@ class Sources(models.Model):
     objects = models.Manager()
 
     class Meta:
-        """Table for assets"""
+        """Table for sources"""
         db_table = "sources"
 
 
-class Asset(models.Model):
+class Assets(models.Model):
     """
     Asset ORM model.
 
@@ -210,8 +210,26 @@ class Asset(models.Model):
 
     objects = models.Manager()
 
-    # def __str__(self):
-    #     return str(self.name)
+    # Relations
+    # many(assets)-to-one(community)
+    # Delete all assets if a community is deleted 
+    community = models.ForeignKey("Communities", 
+                                  on_delete=models.CASCADE,
+                                  related_name="asset_in_community")
+    # many(assets)-to-one(category)
+    asset_category = models.ForeignKey("Categories",
+                                       on_delete=models.CASCADE,
+                                       related_name="asset_of_category")
+    # many(assets)-to-one(source)
+    source = models.ForeignKey("Sources",
+                                     on_delete=models.CASCADE,
+                                     related_name="asset_from_source")
+    # many(assets)-to-one(user)
+    asset_user = models.ForeignKey("user.Users",
+                                   on_delete=models.CASCADE,
+                                   related_name="asset_by_user")
+    
+    
 
     class Meta:
         """Table for assets"""
@@ -310,12 +328,20 @@ class AssetUpdates(models.Model):
                                     7-None")
 
     objects = models.Manager()
-
-    # def __str__(self):
-    #     return str(self.name)
+    
+    # Relations
+    # many(asset_upates)-to-one(community)
+    # Delete all assets if a community is deleted 
+    community = models.ForeignKey("Communities", 
+                                  on_delete=models.CASCADE,
+                                  related_name="assetupdate_in_community")
+    # many(asset_upates)-to-one(asset)
+    update_asset = models.ForeignKey("Assets", 
+                              on_delete=models.CASCADE,
+                              related_name="assetupdate_for_asset")
 
     class Meta:
-        """Table for assets"""
+        """Table for asset_updates"""
         db_table = "asset_updates"
 
 
@@ -356,9 +382,21 @@ class AssetRatings(models.Model):
 
     objects = models.Manager()
 
-    # def __str__(self):
-    #     return str(self.name)
+    # Relations
+    # many(asset_ratings)-to-one(community)
+    # Delete all assets if a community is deleted 
+    community = models.ForeignKey("Communities", 
+                                  on_delete=models.CASCADE,
+                                  related_name="assetratings_in_community")
+    # many(asset_ratings)-to-one(asset)
+    rating_asset = models.ForeignKey("Assets", 
+                              on_delete=models.CASCADE,
+                              related_name="assetratings_for_asset")
+    # many(asset_ratings)-to-one(user)
+    rating_user = models.ForeignKey("user.Users",
+                             on_delete=models.CASCADE,
+                             related_name="assetrating_by_user")
 
     class Meta:
-        """Table for assets"""
+        """Table for asset_ratings"""
         db_table = "asset_ratings"

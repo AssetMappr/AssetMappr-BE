@@ -5,7 +5,7 @@ Author: Shashank Shekhar
 """
 
 from rest_framework import serializers
-from .models import Asset
+from .models import Assets
 
 
 class AssetSerializer(serializers.ModelSerializer):
@@ -16,5 +16,5 @@ class AssetSerializer(serializers.ModelSerializer):
         """
         Meta Info for class.
         """
-        model = Asset
+        model = Assets
         fields = ('pk', 'name', 'description')

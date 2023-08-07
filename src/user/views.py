@@ -8,7 +8,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from .models import User
+from .models import Users
 from .serializers import UserSerializer
 
 
@@ -45,14 +45,14 @@ class SignupView(APIView):
             password = serializer.validated_data["password"]
             try:
                 # Check if user already exists
-                User.objects.get(email=email)
+                Users.objects.get(email=email)
                 return Response(
                     {"error": "User with this email already exists."},
                     status=status.HTTP_409_CONFLICT,
                 )
-            except User.DoesNotExist:
+            except Users.DoesNotExist:
                 # Create a new user instance
-                user = User(email=email)
+                user = Users(email=email)
                 user.set_password(password)
                 user.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -99,8 +99,8 @@ class LoginView(APIView):
 
         # Retrieve the user based on the email
         try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
+            user = Users.objects.get(email=email)
+        except Users.DoesNotExist:
             return Response(
                 {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )

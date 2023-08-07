@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from .models import Asset
+from .models import Assets
 from .serializer import AssetSerializer
 
 # from drf_yasg.utils import swagger_auto_schema
@@ -37,7 +37,7 @@ class AssetsView(APIView):
         Returns:
             response(HttpResponse): Reponse.
         """
-        data = Asset.objects.all()
+        data = Assets.objects.all()
 
         serializer = AssetSerializer(data, context={"request": request}, many=True)
 
