@@ -56,4 +56,4 @@ jobs:
             ./dev-deploy.sh
           '
           # Backend server details
-          echo "Server running on - httP://$HOSTNAME/api"
+          echo "Server running on - http://$HOSTNAME/api"
