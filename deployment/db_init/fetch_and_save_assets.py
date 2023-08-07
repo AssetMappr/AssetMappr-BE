@@ -10,8 +10,9 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 from datetime import datetime, timezone
 from pandas import DataFrame
 
-from db_init.constants import TANGIBLE_ASSET, ASSETS_DATA_LOC, CONFIGURATION
-from db_init.national.fetch_national_assets import fetch_national_assets
+from deployment.db_init.constants import TANGIBLE_ASSET, \
+    ASSETS_DATA_LOC, CONFIGURATION
+from deployment.db_init.national.fetch_national_assets import fetch_national_assets
 
 
 def de_duplication(data: DataFrame, cols: list):
@@ -83,8 +84,8 @@ if __name__ == "__main__":
         # Incorporated Place GEOID
         # Sourced from https://geocoding.geo.census.gov/geocoder/geographies
         # /onelineaddress?form
-        national_data["com_name"] = community["name"]
-        national_data["com_geo_id"] = community["communityGeoId"]
+        national_data["community_name"] = community["name"]
+        national_data["community_geo_id"] = community["communityGeoId"]
 
         national_data["type"] = TANGIBLE_ASSET
         national_data["timestamp"] = datetime.now(timezone.utc)

@@ -7,16 +7,17 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 import sys
 import pandas as pd
 
-from db_init.constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
+from deployment.db_init.constants import DB_CONN_STRING, ASSET_CATEGORIES_LOC, \
     ASSET_CATEGORIES_TABLE, RATING_VALUES_LOC, RATING_VALUES_TABLE, \
     COMMUNITIES_TABLE, COMMUNITIES_LOC, SOURCES_LOC, SOURCES_TABLE, \
     ASSETS_DATA_LOC, ASSETS_TABLE
-from db_init.db_utils import check_connection, drop_table, execute_queries, \
-    insert_into, read_all_rows
+from deployment.db_init.db_utils import check_connection, drop_table, \
+    execute_queries, insert_into, read_all_rows
 
 
 ASSET_CATEGORIES_MAP = {}
 SOURCES_MAP = {}
+COMMUNITIES_MAP = {}
 
 
 def drop_and_create():
@@ -223,19 +224,25 @@ def populate_assets():
     """
       Populates the asset information at loc './data/assets.tsv'
     """
-    # Assets - name | type | com_name | com_geo_id | source_type | source_name |
-    # user_id | category | category_id | description | website | latitude |
-    # longitude | address | timestamp | status
+    # Assets
     data = pd.read_csv(ASSETS_DATA_LOC, sep='\t', header=0)
     # Drop rows if source not part of base tables
     data = data[data["source_name"].isin(SOURCES_MAP.keys())]
-    data["source_type"] = data["source_name"].map(SOURCES_MAP)
+    data["source_id"] = data["source_name"].map(SOURCES_MAP)
 
     # Drop rows if category not part of base tables
     data = data[data["category"].isin(ASSET_CATEGORIES_MAP.keys())]
     data["category_id"] = data["category"].map(ASSET_CATEGORIES_MAP)
+
+    data = data[data["community_geo_id"].isin(COMMUNITIES_MAP.keys())]
+    data["community_id"] = data["community_geo_id"].map(COMMUNITIES_MAP)
+
     data.reset_index(drop=True, inplace=True)
 
+    data = data[["name", "type", "community_geo_id", "community_name",
+                 "description", "website", "latitude", "longitude",
+                 "address", "timestamp", "status", "category_id",
+                 "community_id", "source_id"]]
     columns = data.columns.tolist()
     insert_into(ASSETS_TABLE, columns, data)
 
@@ -253,6 +260,10 @@ def create_map():
     rows = read_all_rows("sources")
     for row in rows:
         SOURCES_MAP[row[1]] = row[0]
+
+    rows = read_all_rows("communities")
+    for row in rows:
+        COMMUNITIES_MAP[row[1]] = row[0]
 
 
 def populate_data():
@@ -281,6 +292,6 @@ if __name__ == "__main__":
         sys.exit()
 
     # Drop and create new tables
-    drop_and_create()
+    # drop_and_create()
     # Populate base/master tables and assets' data
     populate_data()

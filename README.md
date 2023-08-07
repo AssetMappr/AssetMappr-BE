@@ -47,10 +47,10 @@ pylint <filename>
 ## DB Initialization
 Fetch and Save Asset Information
 ```bash
-python ./db_init/fetch_and_save_assets.py
+python deployment/db_init/fetch_and_save_assets.py
 ```
 Create and populate database
 ```bash
-python ./db_init/db_utils.py
+python deployment/db_init/db_utils.py
 ```
 Note: Mind the relative path.

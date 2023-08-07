@@ -8,7 +8,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from .models import User
+from .models import Users, Profiles
 from .serializers import UserSerializer
 
 
@@ -24,11 +24,20 @@ class SignupView(APIView):
             properties={
                 "email": openapi.Schema(type=openapi.TYPE_STRING),
                 "password": openapi.Schema(type=openapi.TYPE_STRING),
+                "comGeoId": openapi.Schema(type=openapi.TYPE_NUMBER),
+                "name": openapi.Schema(type=openapi.TYPE_STRING),
+                "mobile": openapi.Schema(type=openapi.TYPE_STRING),
             },
         ),
         responses={
             status.HTTP_201_CREATED: openapi.Response(
                 description="User created successfully",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "userId": openapi.Schema(type=openapi.TYPE_NUMBER),
+                    },
+                ),
             ),
             status.HTTP_400_BAD_REQUEST: openapi.Response(
                 description="Invalid request",
@@ -43,17 +52,31 @@ class SignupView(APIView):
             password = serializer.validated_data["password"]
             try:
                 # Check if user already exists
-                User.objects.get(email=email)
+                Users.objects.get(email=email)
                 return Response(
                     {"error": "User with this email already exists."},
                     status=status.HTTP_409_CONFLICT,
                 )
-            except User.DoesNotExist:
+            except Users.DoesNotExist:
                 # Create a new user instance
-                user = User(email=email)
+                user = Users(email=email)
                 user.set_password(password)
                 user.save()
-                return Response(status=status.HTTP_201_CREATED)
+
+                # Attach profile information
+                community_geo_id = request.data["comGeoId"]
+                name = request.data["name"]
+                mobile = request.data["mobile"]
+                profile = Profiles(
+                    user=user,
+                    first_name=name,
+                    com_geo_id=community_geo_id,
+                    mobile=mobile)
+                profile.save()
+
+                response_data = {"userId": user.id}
+
+                return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -76,6 +99,9 @@ class LoginView(APIView):
                     properties={
                         "access_token": openapi.Schema(type=openapi.TYPE_STRING),
                         "refresh_token": openapi.Schema(type=openapi.TYPE_STRING),
+                        "email": openapi.Schema(type=openapi.TYPE_STRING),
+                        "comGeoId": openapi.Schema(type=openapi.TYPE_NUMBER),
+                        "name": openapi.Schema(type=openapi.TYPE_STRING),
                     },
                 ),
             ),
@@ -97,11 +123,10 @@ class LoginView(APIView):
 
         # Retrieve the user based on the email
         try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response(
-                {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-            )
+            user = Users.objects.get(email=email)
+        except Users.DoesNotExist:
+            return Response({"detail": "Invalid credentials"},
+                            status=status.HTTP_401_UNAUTHORIZED)
 
         # Verify the password
         if user.check_password(password):
@@ -109,18 +134,21 @@ class LoginView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
+            name = f"{user.profile.first_name} {user.profile.last_name}"
+            community_id = user.profile.com_geo_id
 
             response_data = {
                 "access_token": access_token,
                 "refresh_token": refresh_token,
+                "email": email,
+                "comGeoId": community_id,
+                "name": name
             }
-
             # Return the tokens in the response
             return Response(response_data, status=status.HTTP_200_OK)
         else:
-            return Response(
-                {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-            )
+            return Response({"detail": "Invalid credentials"},
+                            status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RefreshTokenView(APIView):

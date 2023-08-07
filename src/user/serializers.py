@@ -1,7 +1,7 @@
 """Serializer for user"""
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
+from .models import Users
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,14 +9,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """User meta"""
-        model = User
+        model = Users
         fields = ['id', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         """Create user"""
         password = validated_data.pop('password')
-        user = User.objects.create(**validated_data)
+        user = Users.objects.create(**validated_data)
         user.set_password(password)
         user.save()
         return user
