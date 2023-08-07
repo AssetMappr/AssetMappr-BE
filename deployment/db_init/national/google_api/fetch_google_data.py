@@ -136,8 +136,8 @@ def fetch_google_asset_data(
       Returns:
           data_frame(dataframe): Dataframe with data, otherwise empty
       """
-    path = f"{ROOT_PATH}/national/google_api/keywords/{keywords_file}"
-    with open(path, 'r', encoding='utf-8') as kw_file:
+    with open(f"{ROOT_PATH}/national/google_api/keywords/{keywords_file}", 
+              'r', encoding='utf-8') as kw_file:
         keywords = []
         categories = []
         for line in kw_file:
