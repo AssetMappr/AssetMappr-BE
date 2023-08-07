@@ -239,20 +239,10 @@ def populate_assets():
 
     data.reset_index(drop=True, inplace=True)
 
-    data = data[["name",
-                 "type",
-                 "community_geo_id",
-                 "community_name",
-                 "description",
-                 "website",
-                 "latitude",
-                 "longitude",
-                 "address",
-                 "timestamp",
-                 "status",
-                 "category_id",
-                 "community_id",
-                 "source_id"]]
+    data = data[["name", "type", "community_geo_id", "community_name",
+                 "description", "website", "latitude", "longitude",
+                 "address", "timestamp", "status", "category_id",
+                 "community_id", "source_id"]]
     columns = data.columns.tolist()
     insert_into(ASSETS_TABLE, columns, data)
 

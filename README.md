@@ -45,15 +45,12 @@ pylint <filename>
 ```
 
 ## DB Initialization
-```bash
-cd deployment/db_init
-```
 Fetch and Save Asset Information
 ```bash
-python fetch_and_save_assets.py
+python deployment/db_init/fetch_and_save_assets.py
 ```
 Create and populate database
 ```bash
-python db_utils.py
+python deployment/db_init/db_utils.py
 ```
 Note: Mind the relative path.
