@@ -17,7 +17,7 @@ import pandas as pd
 import requests
 
 from deployment.db_init.constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
-    GOOGLE_API_PLACE_NEARBY_SEARCH, GOOGLE_API_PLACE_DETAILS
+    GOOGLE_API_PLACE_NEARBY_SEARCH, GOOGLE_API_PLACE_DETAILS, ROOT_PATH
 
 
 def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
@@ -136,7 +136,7 @@ def fetch_google_asset_data(
       Returns:
           data_frame(dataframe): Dataframe with data, otherwise empty
       """
-    path = f"./deployment/db_init/national/google_api/keywords/{keywords_file}"
+    path = f"{ROOT_PATH}/national/google_api/keywords/{keywords_file}"
     with open(path, 'r', encoding='utf-8') as kw_file:
         keywords = []
         categories = []

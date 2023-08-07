@@ -6,9 +6,11 @@ Author: Niranjan Kumawat
 import os
 import json
 
+ROOT_PATH = f"{os.getcwd()}/deployment/db_init"
+
 # Fetch the configuration file
 CONFIGURATION = None
-with open("./deployment/db_init/config.json", "r", encoding='utf-8') as cf:
+with open(f"{ROOT_PATH}/config.json", "r", encoding='utf-8') as cf:
     CONFIGURATION = json.load(cf)
 
 # Environment Variables
