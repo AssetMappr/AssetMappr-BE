@@ -22,7 +22,8 @@ class Categories(models.Model):
         max_length=255,
         null=False,
         verbose_name="Category",
-        default="")
+        default="",
+        unique=True)
     description = models.TextField(verbose_name="Category's description",
                                    default="")
 
@@ -44,11 +45,12 @@ class RatingValues(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     id = models.AutoField(primary_key=True, verbose_name="Value ID")
-    category = models.CharField(
+    value = models.CharField(
         max_length=255,
         null=False,
         verbose_name="Value",
-        default="")
+        default="",
+        unique=True)
     weight = models.SmallIntegerField(verbose_name="Value's weightage",
                                       default=-1)
 
@@ -71,7 +73,8 @@ class Communities(models.Model):
         longitude (double): Community's longitude
         objects(objects): Collection of objects. Part of Django.
     """
-    geo_id = models.AutoField(primary_key=True, verbose_name="Geo ID")
+    id = models.AutoField(primary_key=True, verbose_name="Geo ID")
+    geo_id = models.IntegerField(unique=True, verbose_name="Geo ID")
     name = models.CharField(max_length=255,
                             null=False,
                             verbose_name="Community name",
@@ -102,15 +105,16 @@ class Sources(models.Model):
     Source ORM model.
 
     Attributes:
-        type (int): Source type
+        id (int): Source ID
         name (string): Source name
         objects(objects): Collection of objects. Part of Django.
     """
-    type = models.AutoField(primary_key=True, verbose_name="Source type")
+    id = models.AutoField(primary_key=True, verbose_name="Source type")
     name = models.CharField(max_length=255,
                             null=False,
                             verbose_name="Source name",
-                            default="")
+                            default="",
+                            unique=True)
 
     objects = models.Manager()
 
@@ -163,31 +167,29 @@ class Assets(models.Model):
                                     default=-1,
                                     verbose_name="Asset type - 0:Tangible \
                                         or 1:Intangible")
-    com_name = models.CharField(max_length=255,
-                                null=False,
-                                default="",
-                                verbose_name="Community name")
-    com_geo_id = models.IntegerField(null=False, 
-                                     default=-1,
-                                     verbose_name="Community geo ID")
-    source_type = models.IntegerField(null=False, 
-                                      default=-1,
-                                      verbose_name="Asset's source type")
-    source_name = models.CharField(max_length=255, 
-                                   default="",
-                                   verbose_name="Source name")
-    user_id = models.BigIntegerField(default=-1,
-                                     verbose_name="User's ID")
-    category = models.CharField(max_length=255,
-                                null=False,
-                                default="",
-                                verbose_name="Asset's category")
-    category_id = models.IntegerField(null=False, 
-                                      default=-1,
-                                      verbose_name="Category ID")
+    community_geo_id = models.BigIntegerField(null=False,
+                                      default=0,
+                                      verbose_name="Community name")
+    community_name = models.CharField(max_length=255, 
+                                      verbose_name="Community",
+                                      default="")
+    # many(assets)-to-one(community)
+    # Delete all assets if a community is deleted 
+    community = models.ForeignKey("Communities", 
+                                on_delete=models.CASCADE)
+    source = models.ForeignKey("Sources",
+                               on_delete=models.CASCADE)
+    # many(assets)-to-one(user)
+    user = models.ForeignKey("user.Users",
+                             on_delete=models.CASCADE,
+                             null=True)
+    category = models.ForeignKey("Categories",
+                                 on_delete=models.CASCADE)
     description = models.TextField(default="",
+                                   null=True,
                                    verbose_name="Asset's description")
     website = models.TextField(default="",
+                               null=True,
                                verbose_name="Website")
     latitude = models.DecimalField(null=False, 
                                    default=0.0,
@@ -209,27 +211,6 @@ class Assets(models.Model):
                                       verbose_name="Asset's status: 0 - exists, 1 - missed, 2 - suggested")
 
     objects = models.Manager()
-
-    # Relations
-    # many(assets)-to-one(community)
-    # Delete all assets if a community is deleted 
-    community = models.ForeignKey("Communities", 
-                                  on_delete=models.CASCADE,
-                                  related_name="asset_in_community")
-    # many(assets)-to-one(category)
-    asset_category = models.ForeignKey("Categories",
-                                       on_delete=models.CASCADE,
-                                       related_name="asset_of_category")
-    # many(assets)-to-one(source)
-    source = models.ForeignKey("Sources",
-                                     on_delete=models.CASCADE,
-                                     related_name="asset_from_source")
-    # many(assets)-to-one(user)
-    asset_user = models.ForeignKey("user.Users",
-                                   on_delete=models.CASCADE,
-                                   related_name="asset_by_user")
-    
-    
 
     class Meta:
         """Table for assets"""
@@ -281,20 +262,16 @@ class AssetUpdates(models.Model):
         (7, 'None'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
-    asset_id = models.BigIntegerField(null=False, 
-                                      default=-1,
-                                      verbose_name="Asset ID")
+    # many(asset_upates)-to-one(asset)
+    asset = models.ForeignKey("Assets", 
+                              on_delete=models.CASCADE)
     name = models.CharField(max_length=255, 
                             default="",
-                            verbose_name="Asset's name")
-    com_geo_id = models.IntegerField(null=False,
-                                     default=-1,
-                                     verbose_name="Community geo ID")
-    category = models.CharField(max_length=255,
-                                default="",
-                                verbose_name="Category")
-    category_id = models.IntegerField(default=-1,
-                                      verbose_name="Category ID")
+                            verbose_name="Asset's new name")
+    community = models.ForeignKey("Communities", 
+                                on_delete=models.CASCADE)
+    category = models.ForeignKey("Categories",
+                                 on_delete=models.CASCADE)
     description = models.TextField(default="",
                                    verbose_name="Description")
     website = models.TextField(default="",
@@ -328,17 +305,6 @@ class AssetUpdates(models.Model):
                                     7-None")
 
     objects = models.Manager()
-    
-    # Relations
-    # many(asset_upates)-to-one(community)
-    # Delete all assets if a community is deleted 
-    community = models.ForeignKey("Communities", 
-                                  on_delete=models.CASCADE,
-                                  related_name="assetupdate_in_community")
-    # many(asset_upates)-to-one(asset)
-    update_asset = models.ForeignKey("Assets", 
-                              on_delete=models.CASCADE,
-                              related_name="assetupdate_for_asset")
 
     class Meta:
         """Table for asset_updates"""
@@ -362,14 +328,13 @@ class AssetRatings(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
-    asset_id = models.BigIntegerField(null=False, 
-                                      default=-1,
-                                      verbose_name="Asset ID")
-    com_geo_id = models.IntegerField(null=False, 
-                                     default=-1,
-                                     verbose_name="Community geo ID")
-    user_id = models.BigIntegerField(default=-1,
-                                     verbose_name="User ID")
+    asset = models.ForeignKey("Assets", 
+                              on_delete=models.CASCADE)
+    community = models.ForeignKey("Communities", 
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey("user.Users",
+                             on_delete=models.CASCADE,
+                             null=True)
     timestamp = models.DateTimeField(null=False, 
                                      auto_now=True,
                                      verbose_name="Timestamp in UTC")
@@ -377,25 +342,10 @@ class AssetRatings(models.Model):
                                             verbose_name="Rating scale")
     comment = models.TextField(default="",
                                verbose_name="Comment")
-    value_id = models.SmallIntegerField(default=-1, 
-                                        verbose_name="Value ID")
+    value = models.ForeignKey("RatingValues", 
+                              on_delete=models.CASCADE)
 
     objects = models.Manager()
-
-    # Relations
-    # many(asset_ratings)-to-one(community)
-    # Delete all assets if a community is deleted 
-    community = models.ForeignKey("Communities", 
-                                  on_delete=models.CASCADE,
-                                  related_name="assetratings_in_community")
-    # many(asset_ratings)-to-one(asset)
-    rating_asset = models.ForeignKey("Assets", 
-                              on_delete=models.CASCADE,
-                              related_name="assetratings_for_asset")
-    # many(asset_ratings)-to-one(user)
-    rating_user = models.ForeignKey("user.Users",
-                             on_delete=models.CASCADE,
-                             related_name="assetrating_by_user")
 
     class Meta:
         """Table for asset_ratings"""

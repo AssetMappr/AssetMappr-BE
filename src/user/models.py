@@ -75,9 +75,9 @@ class UserProfile(models.Model):
         ('planner', 'planner'),
         ('citizen', 'citizen'),
     ]
-    u_id = models.BigIntegerField(null=False, 
-                                  default=-1, 
-                                  verbose_name="User ID")
+    # one-to-one
+    user = models.OneToOneField("Users", 
+                                on_delete=models.CASCADE)
     type = models.CharField(max_length=25,
                             null=False,
                             choices=TYPE_CHOICES,
@@ -118,13 +118,11 @@ class UserProfile(models.Model):
     # Relations
     # one-to-one
     user = models.OneToOneField("Users", 
-                                on_delete=models.CASCADE, 
-                                related_name="profile")
+                                on_delete=models.CASCADE)
     # many(user)-to-one(community)
     # Delete all users if a community is deleted 
     community = models.ForeignKey("assets.Communities", 
-                                  on_delete=models.CASCADE,
-                                  related_name="profile_of_community")
+                                  on_delete=models.CASCADE)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Table for user info"""

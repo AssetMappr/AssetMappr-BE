@@ -77,10 +77,11 @@ def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
         res_dataframe = pd.concat([res_dataframe, dataframe])
         if "next_page_token" in result:
             params["pagetoken"] = result['next_page_token']
+            time.sleep(1)
             # Need to introduce this so that API call ready for token
             print("Waiting for next page token to generate.")
-            print(result['next_page_token'])
-            #time.sleep(1)
+            # TODO: FIgure out why it runs for more iterations
+            break
         else:
             break
     res_dataframe = res_dataframe.reset_index(drop=True)
@@ -157,7 +158,7 @@ def fetch_google_asset_data(
         dataframe = get_map_data(keyword, latitude, longitude, radius)
         dataframe["category"] = category
 
-        data = data.append([dataframe], ignore_index=True)
+        data = pd.concat([data, dataframe], ignore_index=True)
 
     data = data.drop(data.loc[data["price_level"] >= 1].index)
     data = data.loc[:, data.columns.isin(["latitude",
@@ -177,7 +178,7 @@ def fetch_google_asset_data(
 
     dataframe = pd.DataFrame.from_dict(websites)
     data = data.join(dataframe.set_index("place_id"), on="place_id")
-    data.drop(columns="place_id", in_place=True)
+    data.drop(columns="place_id", inplace=True)
 
     # Drop duplicates
     data = data.drop_duplicates()

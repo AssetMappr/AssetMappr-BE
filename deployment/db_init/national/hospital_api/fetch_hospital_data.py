@@ -54,7 +54,6 @@ def fetch_hospitals_asset_data(state_code: str, county_fips: str):
         latitudes = []
         longitudes = []
         for i in data["address"]:
-            print(get_address_coordinates(i))
             latitude, longitude, _ = get_address_coordinates(i)
             latitudes.append(latitude)
             longitudes.append(longitude)

@@ -39,11 +39,14 @@ def fetch_national_assets(
     (county_fips, county_name) = county_details
     (latitude, longitude) = coordinates
     # Asset information extracted using keywords from Google API
+    print("Fetching data from Google API")
     df_google = fetch_google_asset_data(
         keywords_filename, latitude, longitude, radius)
     # Hospitals asset information
+    print("Fetching data from Hospital API")
     df_hospitals = fetch_hospitals_asset_data(state_code, county_fips)
     # Schools asset information
+    print("Fetching data from Schools API")
     df_schools = fetch_schools_asset_data(state_code, county_fips, county_name)
     
     return pd.concat([df_google, df_hospitals, df_schools])

@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2 import extras
 from pandas import DataFrame
 
-from db_init.constants import DB_CONN_STRING
+from constants import DB_CONN_STRING
 
 
 def check_connection(conn_string: str):
@@ -79,7 +79,7 @@ def insert_into(table: str, columns: list, data: DataFrame):
           data(DataFrame): Values corresponding to columns
     """
     columns = ",".join(columns)
-    query = f"INSERT INTO {table}({columns}) VALUES %%s"
+    query = f"INSERT INTO {table}({columns}) VALUES %s"
     tuples = [tuple(x) for x in data.to_numpy()]
     conn = psycopg2.connect(DB_CONN_STRING)
     cursor = conn.cursor()

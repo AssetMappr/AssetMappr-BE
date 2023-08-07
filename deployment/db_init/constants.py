@@ -36,7 +36,7 @@ REQUEST_DENIED_STATUS = "REQUEST_DENIED"
 
 # Values
 # Asset related
-TANGIBLE_ASSET = "Tangible"
+TANGIBLE_ASSET = 0 # Asset type - 0:Tangible or 1:Intangible
 
 # Locations
 ASSETS_DATA_LOC = "./data/assets.tsv"
