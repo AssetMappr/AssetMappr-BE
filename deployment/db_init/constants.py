@@ -8,7 +8,7 @@ import json
 
 # Fetch the configuration file
 CONFIGURATION = None
-with open("./config.json", "r", encoding='utf-8') as cf:
+with open("./deployment/db_init/config.json", "r", encoding='utf-8') as cf:
     CONFIGURATION = json.load(cf)
 
 # Environment Variables
