@@ -37,7 +37,10 @@ class AssetsView(APIView):
         Returns:
             response(HttpResponse): Reponse.
         """
+        community_geo_id = request.GET.get('com_geo_id')
         data = Assets.objects.all()
+        if community_geo_id:
+            data = data.filter(community_geo_id__exact=community_geo_id)
 
         serializer = AssetSerializer(data, context={"request": request}, many=True)
 
