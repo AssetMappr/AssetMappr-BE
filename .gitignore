@@ -9,3 +9,5 @@ media
 .idea
 .vscode
 */venv
+deployment/db_init/data/assets.tsv
+*migrations

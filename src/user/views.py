@@ -67,9 +67,13 @@ class SignupView(APIView):
                 community_geo_id = request.data["comGeoId"]
                 name = request.data["name"]
                 mobile = request.data["mobile"]
-                profile = Profiles(user=user, first_name=name, com_geo_id=community_geo_id, mobile=mobile)
+                profile = Profiles(
+                    user=user,
+                    first_name=name,
+                    com_geo_id=community_geo_id,
+                    mobile=mobile)
                 profile.save()
-                
+
                 response_data = {"userId": user.id}
 
                 return Response(response_data, status=status.HTTP_201_CREATED)
@@ -121,9 +125,8 @@ class LoginView(APIView):
         try:
             user = Users.objects.get(email=email)
         except Users.DoesNotExist:
-            return Response(
-                {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-            )
+            return Response({"detail": "Invalid credentials"},
+                            status=status.HTTP_401_UNAUTHORIZED)
 
         # Verify the password
         if user.check_password(password):
@@ -133,7 +136,7 @@ class LoginView(APIView):
             refresh_token = str(refresh)
             name = f"{user.profile.first_name} {user.profile.last_name}"
             community_id = user.profile.com_geo_id
-            
+
             response_data = {
                 "access_token": access_token,
                 "refresh_token": refresh_token,
@@ -144,9 +147,8 @@ class LoginView(APIView):
             # Return the tokens in the response
             return Response(response_data, status=status.HTTP_200_OK)
         else:
-            return Response(
-                {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-            )
+            return Response({"detail": "Invalid credentials"},
+                            status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RefreshTokenView(APIView):

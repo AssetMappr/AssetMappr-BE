@@ -8,11 +8,11 @@ Author: Niranjan Kumawat
 """
 import pandas as pd
 
-from national.google_api.fetch_google_data import \
+from deployment.db_init.national.google_api.fetch_google_data import \
     fetch_google_asset_data
-from national.hospital_api.fetch_hospital_data import \
+from deployment.db_init.national.hospital_api.fetch_hospital_data import \
     fetch_hospitals_asset_data
-from national.school_api.fetch_schools_data import \
+from deployment.db_init.national.school_api.fetch_schools_data import \
     fetch_schools_asset_data
 
 
@@ -48,5 +48,5 @@ def fetch_national_assets(
     # Schools asset information
     print("Fetching data from Schools API")
     df_schools = fetch_schools_asset_data(state_code, county_fips, county_name)
-    
+
     return pd.concat([df_google, df_hospitals, df_schools])

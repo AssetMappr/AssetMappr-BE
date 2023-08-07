@@ -6,7 +6,8 @@ Author: Niranjan Kumawat
 import json
 import requests
 
-from constants import GOOGLE_API_KEY, REQUEST_DENIED_STATUS, OK_STATUS, \
+from deployment.db_init.constants import GOOGLE_API_KEY, \
+    REQUEST_DENIED_STATUS, OK_STATUS, \
     GOOGLE_API_GEOCODE
 
 

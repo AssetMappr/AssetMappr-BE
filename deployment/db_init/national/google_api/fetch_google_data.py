@@ -16,7 +16,7 @@ import time
 import pandas as pd
 import requests
 
-from constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
+from deployment.db_init.constants import GOOGLE_API_KEY, OK_STATUS, REQUEST_DENIED_STATUS, \
     GOOGLE_API_PLACE_NEARBY_SEARCH, GOOGLE_API_PLACE_DETAILS
 
 
@@ -80,8 +80,8 @@ def get_map_data(keyword: str, latitude: float, longitude: float, radius: int):
             time.sleep(1)
             # Need to introduce this so that API call ready for token
             print("Waiting for next page token to generate.")
-            # TODO: FIgure out why it runs for more iterations
-            break
+            # Figure out why it runs for more iterations
+            # break
         else:
             break
     res_dataframe = res_dataframe.reset_index(drop=True)

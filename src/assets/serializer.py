@@ -17,7 +17,7 @@ class AssetSerializer(serializers.ModelSerializer):
         Meta Info for class.
         """
         model = Assets
-        fields = ("id", 
+        fields = ("id",
                   "name",
                   "type",
                   "community_geo_id",

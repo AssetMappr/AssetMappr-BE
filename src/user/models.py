@@ -77,7 +77,7 @@ class Profiles(models.Model):
         ('citizen', 'citizen'),
     ]
     # one-to-one
-    user = models.OneToOneField("Users", 
+    user = models.OneToOneField("Users",
                                 on_delete=models.CASCADE,
                                 primary_key=True)
     type = models.CharField(max_length=25,
@@ -115,15 +115,14 @@ class Profiles(models.Model):
     gender = models.CharField(max_length=50,
                               default="",
                               verbose_name="Gender")
-    
 
     # Relations
     # one-to-one
-    user = models.OneToOneField("Users", 
+    user = models.OneToOneField("Users",
                                 on_delete=models.CASCADE)
     # many(user)-to-one(community)
-    # Delete all users if a community is deleted 
-    community = models.ForeignKey("assets.Communities", 
+    # Delete all users if a community is deleted
+    community = models.ForeignKey("assets.Communities",
                                   on_delete=models.CASCADE)
 
     class Meta:  # pylint: disable=too-few-public-methods

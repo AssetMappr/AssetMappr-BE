@@ -82,16 +82,16 @@ class Communities(models.Model):
     class_code = models.CharField(max_length=20,
                                   verbose_name="Community class code",
                                   default="")
-    latitude = models.DecimalField(null=False, 
+    latitude = models.DecimalField(null=False,
                                    max_digits=12,
                                    decimal_places=10,
                                    verbose_name="Community's latitude",
                                    default=0.0)
-    longitude = models.DecimalField(null=False, 
-                                   max_digits=12,
-                                   decimal_places=10,
-                                   verbose_name="Community's longitude",
-                                   default=0.0)
+    longitude = models.DecimalField(null=False,
+                                    max_digits=12,
+                                    decimal_places=10,
+                                    verbose_name="Community's longitude",
+                                    default=0.0)
 
     objects = models.Manager()
 
@@ -160,7 +160,7 @@ class Assets(models.Model):
         (2, 'Suggestion'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Asset ID")
-    name = models.CharField(max_length=255, 
+    name = models.CharField(max_length=255,
                             verbose_name="Asset's name",
                             default="")
     type = models.SmallIntegerField(choices=TYPE_CHOICES,
@@ -168,15 +168,15 @@ class Assets(models.Model):
                                     verbose_name="Asset type - 0:Tangible \
                                         or 1:Intangible")
     community_geo_id = models.BigIntegerField(null=False,
-                                      default=0,
-                                      verbose_name="Community name")
-    community_name = models.CharField(max_length=255, 
+                                              default=0,
+                                              verbose_name="Community name")
+    community_name = models.CharField(max_length=255,
                                       verbose_name="Community",
                                       default="")
     # many(assets)-to-one(community)
-    # Delete all assets if a community is deleted 
-    community = models.ForeignKey("Communities", 
-                                on_delete=models.CASCADE)
+    # Delete all assets if a community is deleted
+    community = models.ForeignKey("Communities",
+                                  on_delete=models.CASCADE)
     source = models.ForeignKey("Sources",
                                on_delete=models.CASCADE)
     # many(assets)-to-one(user)
@@ -191,24 +191,25 @@ class Assets(models.Model):
     website = models.TextField(default="",
                                null=True,
                                verbose_name="Website")
-    latitude = models.DecimalField(null=False, 
+    latitude = models.DecimalField(null=False,
                                    default=0.0,
                                    max_digits=12,
                                    decimal_places=10,
                                    verbose_name="Asset's latitude")
-    longitude = models.DecimalField(null=False, 
+    longitude = models.DecimalField(null=False,
                                     default=0.0,
                                     max_digits=12,
                                     decimal_places=10,
                                     verbose_name="Asset's longitude")
     address = models.TextField(default="",
                                verbose_name="Asset's address")
-    timestamp = models.DateTimeField(null=False, 
+    timestamp = models.DateTimeField(null=False,
                                      auto_now=True,
                                      verbose_name="Timestamp in UTC")
-    status = models.SmallIntegerField(choices=STATUS_CHOICES,
-                                      default=-1,
-                                      verbose_name="Asset's status: 0 - exists, 1 - missed, 2 - suggested")
+    status = models.SmallIntegerField(
+        choices=STATUS_CHOICES,
+        default=-1,
+        verbose_name="Asset's status: 0 - exists, 1 - missed, 2 - suggested")
 
     objects = models.Manager()
 
@@ -263,13 +264,13 @@ class AssetUpdates(models.Model):
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
     # many(asset_upates)-to-one(asset)
-    asset = models.ForeignKey("Assets", 
+    asset = models.ForeignKey("Assets",
                               on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, 
+    name = models.CharField(max_length=255,
                             default="",
                             verbose_name="Asset's new name")
-    community = models.ForeignKey("Communities", 
-                                on_delete=models.CASCADE)
+    community = models.ForeignKey("Communities",
+                                  on_delete=models.CASCADE)
     category = models.ForeignKey("Categories",
                                  on_delete=models.CASCADE)
     description = models.TextField(default="",
@@ -281,12 +282,12 @@ class AssetUpdates(models.Model):
                                    default=0.0,
                                    verbose_name="New latitude")
     longitude = models.DecimalField(max_digits=12,
-                                   decimal_places=10,
-                                   default=0.0,
-                                   verbose_name="New longitude")
+                                    decimal_places=10,
+                                    default=0.0,
+                                    verbose_name="New longitude")
     address = models.TextField(default="",
                                verbose_name="New address")
-    timestamp = models.DateTimeField(null=False, 
+    timestamp = models.DateTimeField(null=False,
                                      auto_now=True,
                                      verbose_name="Timestamp in UTC")
     type = models.SmallIntegerField(null=False,
@@ -328,21 +329,21 @@ class AssetRatings(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
-    asset = models.ForeignKey("Assets", 
+    asset = models.ForeignKey("Assets",
                               on_delete=models.CASCADE)
-    community = models.ForeignKey("Communities", 
-                                on_delete=models.CASCADE)
+    community = models.ForeignKey("Communities",
+                                  on_delete=models.CASCADE)
     user = models.ForeignKey("user.Users",
                              on_delete=models.CASCADE,
                              null=True)
-    timestamp = models.DateTimeField(null=False, 
+    timestamp = models.DateTimeField(null=False,
                                      auto_now=True,
                                      verbose_name="Timestamp in UTC")
     rating_scale = models.SmallIntegerField(default=-1,
                                             verbose_name="Rating scale")
     comment = models.TextField(default="",
                                verbose_name="Comment")
-    value = models.ForeignKey("RatingValues", 
+    value = models.ForeignKey("RatingValues",
                               on_delete=models.CASCADE)
 
     objects = models.Manager()
