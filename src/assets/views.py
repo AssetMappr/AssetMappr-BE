@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from .models import Asset
+from .models import Assets
 from .serializer import AssetSerializer
 
 # from drf_yasg.utils import swagger_auto_schema
@@ -37,11 +37,14 @@ class AssetsView(APIView):
         Returns:
             response(HttpResponse): Reponse.
         """
-        data = Asset.objects.all()
+        community_geo_id = request.query_params['com_geo_id']
+        data = Assets.objects.all().filter(status__exact=0)
+        if community_geo_id:
+            data = data.filter(community_geo_id__exact=community_geo_id)
 
         serializer = AssetSerializer(data, context={"request": request}, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
     def post(request):

@@ -3,6 +3,9 @@
 # Activate virtual environment 
 . venv/bin/activate
 
+# Make migrations
+python manage.py makemigrations assets user --no-input
+
 # Migrate database
 python manage.py migrate --no-input
 

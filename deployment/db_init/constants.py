@@ -6,9 +6,11 @@ Author: Niranjan Kumawat
 import os
 import json
 
+ROOT_PATH = f"{os.getcwd()}/deployment/db_init"
+
 # Fetch the configuration file
 CONFIGURATION = None
-with open("./config.json", "r", encoding='utf-8') as cf:
+with open(f"{ROOT_PATH}/config.json", "r", encoding='utf-8') as cf:
     CONFIGURATION = json.load(cf)
 
 # Environment Variables
@@ -36,7 +38,7 @@ REQUEST_DENIED_STATUS = "REQUEST_DENIED"
 
 # Values
 # Asset related
-TANGIBLE_ASSET = "Tangible"
+TANGIBLE_ASSET = 0 # Asset type - 0:Tangible or 1:Intangible
 
 # Locations
 ASSETS_DATA_LOC = "./data/assets.tsv"

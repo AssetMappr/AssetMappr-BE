@@ -28,11 +28,14 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class Users(AbstractBaseUser):
     """User class"""
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
-    salt = models.CharField(max_length=255)
+    id = models.BigAutoField(primary_key=True,
+                             verbose_name="User ID")
+    email = models.EmailField(unique=True,
+                              verbose_name="User's email ID")
+    password = models.CharField(max_length=255, verbose_name="Password hash")
+    salt = models.CharField(max_length=255, verbose_name="Salt")
 
     objects = UserManager()
 
@@ -63,29 +66,65 @@ class User(AbstractBaseUser):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """DB table for user"""
-        db_table = "User"
+        db_table = "users"
 
 
-class UserInfo(models.Model):
+class Profiles(models.Model):
     """User Info model"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="info")
-    name = models.CharField(max_length=255)
-    designation = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20)
-    community = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
-    community_geo_id = models.IntegerField()
-    dob = models.DateField()
-    ethnicity = models.CharField(max_length=255)
-    race = models.CharField(max_length=255)
-    gender = models.CharField(max_length=255)
+    TYPE_CHOICES = [
+        ('default', 'default'),
+        ('planner', 'planner'),
+        ('citizen', 'citizen'),
+    ]
+    # one-to-one
+    user = models.OneToOneField("Users",
+                                on_delete=models.CASCADE,
+                                primary_key=True)
+    type = models.CharField(max_length=25,
+                            null=False,
+                            choices=TYPE_CHOICES,
+                            default="default",
+                            verbose_name="planner or citizen")
+    first_name = models.CharField(max_length=255,
+                                  null=False,
+                                  default="",
+                                  verbose_name="First name")
+    last_name = models.CharField(max_length=255,
+                                 null=True,
+                                 verbose_name="Last name")
+    mobile = models.CharField(max_length=15,
+                              null=False,
+                              default="",
+                              verbose_name="Mobile number")
+    com_name = models.CharField(max_length=255,
+                                null=False,
+                                default="",
+                                verbose_name="Community name")
+    com_geo_id = models.IntegerField(null=False,
+                                     default=-1,
+                                     verbose_name="Community geo ID")
+    dob = models.DateField(null=False,
+                           default=None,
+                           verbose_name="Date of birth")
+    ethnicity = models.CharField(max_length=100,
+                                 default="",
+                                 verbose_name="Ethnicity")
+    race = models.CharField(max_length=50,
+                            default="",
+                            verbose_name="Race")
+    gender = models.CharField(max_length=50,
+                              default="",
+                              verbose_name="Gender")
 
-    # Add other fields as needed
-
-    def __str__(self):
-        """Return username"""
-        return str(self.name)
+    # Relations
+    # one-to-one
+    user = models.OneToOneField("Users",
+                                on_delete=models.CASCADE)
+    # many(user)-to-one(community)
+    # Delete all users if a community is deleted
+    community = models.ForeignKey("assets.Communities",
+                                  on_delete=models.CASCADE)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Table for user info"""
-        db_table = "UserInfo"
+        db_table = "user_profiles"
