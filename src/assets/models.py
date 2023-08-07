@@ -21,8 +21,10 @@ class Categories(models.Model):
     category = models.CharField(
         max_length=255,
         null=False,
-        verbose_name="Category")
-    description = models.TextField(verbose_name="Category's description")
+        verbose_name="Category",
+        default="")
+    description = models.TextField(verbose_name="Category's description",
+                                   default="")
 
     objects = models.Manager()
 
@@ -45,8 +47,10 @@ class RatingValues(models.Model):
     category = models.CharField(
         max_length=255,
         null=False,
-        verbose_name="Value")
-    weight = models.SmallIntegerField(verbose_name="Value's weightage")
+        verbose_name="Value",
+        default="")
+    weight = models.SmallIntegerField(verbose_name="Value's weightage",
+                                      default=-1)
 
     objects = models.Manager()
 
@@ -68,17 +72,23 @@ class Communities(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     geo_id = models.AutoField(primary_key=True, verbose_name="Geo ID")
-    name = models.CharField(
-        max_length=255,
-        null=False,
-        verbose_name="Community name")
-    class_code = models.CharField(
-        max_length=20,
-        verbose_name="Community class code")
-    latitude = models.DecimalField(
-        null=False, verbose_name="Community's latitude")
-    longitude = models.DecimalField(
-        null=False, verbose_name="Community's longitude")
+    name = models.CharField(max_length=255,
+                            null=False,
+                            verbose_name="Community name",
+                            default="")
+    class_code = models.CharField(max_length=20,
+                                  verbose_name="Community class code",
+                                  default="")
+    latitude = models.DecimalField(null=False, 
+                                   max_digits=12,
+                                   decimal_places=10,
+                                   verbose_name="Community's latitude",
+                                   default=0.0)
+    longitude = models.DecimalField(null=False, 
+                                   max_digits=12,
+                                   decimal_places=10,
+                                   verbose_name="Community's longitude",
+                                   default=0.0)
 
     objects = models.Manager()
 
@@ -97,10 +107,10 @@ class Sources(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     type = models.AutoField(primary_key=True, verbose_name="Source type")
-    name = models.CharField(
-        max_length=255,
-        null=False,
-        verbose_name="Source name")
+    name = models.CharField(max_length=255,
+                            null=False,
+                            verbose_name="Source name",
+                            default="")
 
     objects = models.Manager()
 
@@ -135,47 +145,68 @@ class Asset(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     TYPE_CHOICES = [
+        (-1, 'Default'),
         (0, 'Tangible'),
         (1, 'Intangible'),
     ]
     STATUS_CHOICES = [
+        (-1, 'Default'),
         (0, 'Status 0'),
         (1, 'Status 1'),
         (2, 'Status 2'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Asset ID")
-    name = models.CharField(max_length=255, verbose_name="Asset's name")
-    type = models.SmallIntegerField(
-        choices=TYPE_CHOICES,
-        verbose_name="Asset type - 0:Tangible or 1:Intangible")
-    com_name = models.CharField(
-        max_length=255,
-        null=False,
-        verbose_name="Community name")
-    com_geo_id = models.IntegerField(
-        null=False, verbose_name="Community geo ID")
-    source_type = models.IntegerField(
-        null=False, verbose_name="Asset's source type")
-    source_name = models.CharField(max_length=255, verbose_name="Source name")
-    user_id = models.BigIntegerField(verbose_name="User's ID")
-    category = models.CharField(
-        max_length=255,
-        null=False,
-        verbose_name="Asset's category")
-    category_id = models.IntegerField(
-        null=False, verbose_name="Category ID")
-    description = models.TextField(verbose_name="Asset's description")
-    website = models.TextField(verbose_name="Website")
-    latitude = models.DecimalField(null=False, verbose_name="Asset's latitude")
-    longitude = models.DecimalField(
-        null=False, verbose_name="Asset's longitude")
-    address = models.TextField(verbose_name="Asset's address")
-    timestamp = models.DateTimeField(
-        null=False, verbose_name="Timestamp in UTC")
-    status = models.SmallIntegerField(
-        choices=STATUS_CHOICES,
-        default=0,
-        verbose_name="Asset's status: 0 - exists, 1 - missed, 2 - suggested")
+    name = models.CharField(max_length=255, 
+                            verbose_name="Asset's name",
+                            default="")
+    type = models.SmallIntegerField(choices=TYPE_CHOICES,
+                                    default=-1,
+                                    verbose_name="Asset type - 0:Tangible \
+                                        or 1:Intangible")
+    com_name = models.CharField(max_length=255,
+                                null=False,
+                                default="",
+                                verbose_name="Community name")
+    com_geo_id = models.IntegerField(null=False, 
+                                     default=-1,
+                                     verbose_name="Community geo ID")
+    source_type = models.IntegerField(null=False, 
+                                      default=-1,
+                                      verbose_name="Asset's source type")
+    source_name = models.CharField(max_length=255, 
+                                   default="",
+                                   verbose_name="Source name")
+    user_id = models.BigIntegerField(default=-1,
+                                     verbose_name="User's ID")
+    category = models.CharField(max_length=255,
+                                null=False,
+                                default="",
+                                verbose_name="Asset's category")
+    category_id = models.IntegerField(null=False, 
+                                      default=-1,
+                                      verbose_name="Category ID")
+    description = models.TextField(default="",
+                                   verbose_name="Asset's description")
+    website = models.TextField(default="",
+                               verbose_name="Website")
+    latitude = models.DecimalField(null=False, 
+                                   default=0.0,
+                                   max_digits=12,
+                                   decimal_places=10,
+                                   verbose_name="Asset's latitude")
+    longitude = models.DecimalField(null=False, 
+                                    default=0.0,
+                                    max_digits=12,
+                                    decimal_places=10,
+                                    verbose_name="Asset's longitude")
+    address = models.TextField(default="",
+                               verbose_name="Asset's address")
+    timestamp = models.DateTimeField(null=False, 
+                                     auto_now=True,
+                                     verbose_name="Timestamp in UTC")
+    status = models.SmallIntegerField(choices=STATUS_CHOICES,
+                                      default=-1,
+                                      verbose_name="Asset's status: 0 - exists, 1 - missed, 2 - suggested")
 
     objects = models.Manager()
 
@@ -217,10 +248,12 @@ class AssetUpdates(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     TYPE_CHOICES = [
+        (-1, 'Default'),
         (0, 'Modify'),
         (1, 'Delete'),
     ]
     STATUS_CHOICES = [
+        (-1, 'Default'),
         (1, 'Under Review'),
         (2, 'Accepted'),
         (3, 'Rejected'),
@@ -230,36 +263,51 @@ class AssetUpdates(models.Model):
         (7, 'None'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
-    asset_id = models.BigAutoField(null=False, verbose_name="Asset ID")
-    name = models.CharField(max_length=255, verbose_name="Asset's name")
-    com_geo_id = models.IntegerField(
-        null=False, verbose_name="Community geo ID")
-    category = models.CharField(
-        max_length=255,
-        verbose_name="Category")
-    category_id = models.IntegerField(verbose_name="Category ID")
-    description = models.TextField(verbose_name="Description")
-    website = models.TextField(verbose_name="Website")
-    latitude = models.DecimalField(verbose_name="New latitude")
-    longitude = models.DecimalField(verbose_name="New longitude")
-    address = models.TextField(verbose_name="New address")
-    timestamp = models.DateTimeField(
-        null=False, verbose_name="Timestamp in UTC")
-    type = models.SmallIntegerField(
-        null=False,
-        choices=TYPE_CHOICES,
-        verbose_name="0 - Modify, 1 - Delete")
-    status = models.IntegerField(
-        null=False,
-        choices=STATUS_CHOICES,
-        default=0,
-        verbose_name="1-Under review; \
-            2-Accepted; \
-            3-Rejected; \
-            4-Permanently closed; \
-            5-Temporarily closed; \
-            6-Never existed; \
-            7-None")
+    asset_id = models.BigIntegerField(null=False, 
+                                      default=-1,
+                                      verbose_name="Asset ID")
+    name = models.CharField(max_length=255, 
+                            default="",
+                            verbose_name="Asset's name")
+    com_geo_id = models.IntegerField(null=False,
+                                     default=-1,
+                                     verbose_name="Community geo ID")
+    category = models.CharField(max_length=255,
+                                default="",
+                                verbose_name="Category")
+    category_id = models.IntegerField(default=-1,
+                                      verbose_name="Category ID")
+    description = models.TextField(default="",
+                                   verbose_name="Description")
+    website = models.TextField(default="",
+                               verbose_name="Website")
+    latitude = models.DecimalField(max_digits=12,
+                                   decimal_places=10,
+                                   default=0.0,
+                                   verbose_name="New latitude")
+    longitude = models.DecimalField(max_digits=12,
+                                   decimal_places=10,
+                                   default=0.0,
+                                   verbose_name="New longitude")
+    address = models.TextField(default="",
+                               verbose_name="New address")
+    timestamp = models.DateTimeField(null=False, 
+                                     auto_now=True,
+                                     verbose_name="Timestamp in UTC")
+    type = models.SmallIntegerField(null=False,
+                                    choices=TYPE_CHOICES,
+                                    default=-1,
+                                    verbose_name="0 - Modify, 1 - Delete")
+    status = models.IntegerField(null=False,
+                                 choices=STATUS_CHOICES,
+                                 default=-1,
+                                 verbose_name="1-Under review; \
+                                    2-Accepted; \
+                                    3-Rejected; \
+                                    4-Permanently closed; \
+                                    5-Temporarily closed; \
+                                    6-Never existed; \
+                                    7-None")
 
     objects = models.Manager()
 
@@ -288,15 +336,23 @@ class AssetRatings(models.Model):
         objects(objects): Collection of objects. Part of Django.
     """
     id = models.BigAutoField(primary_key=True, verbose_name="Update ID")
-    asset_id = models.BigAutoField(null=False, verbose_name="Asset ID")
-    com_geo_id = models.IntegerField(
-        null=False, verbose_name="Community geo ID")
-    user_id = models.BigIntegerField(verbose_name="User ID")
-    timestamp = models.DateTimeField(
-        null=False, verbose_name="Timestamp in UTC")
-    rating_scale = models.SmallIntegerField(verbose_name="Rating scale")
-    comment = models.TextField(verbose_name="Comment")
-    value_id = models.SmallIntegerField(verbose_name="Value ID")
+    asset_id = models.BigIntegerField(null=False, 
+                                      default=-1,
+                                      verbose_name="Asset ID")
+    com_geo_id = models.IntegerField(null=False, 
+                                     default=-1,
+                                     verbose_name="Community geo ID")
+    user_id = models.BigIntegerField(default=-1,
+                                     verbose_name="User ID")
+    timestamp = models.DateTimeField(null=False, 
+                                     auto_now=True,
+                                     verbose_name="Timestamp in UTC")
+    rating_scale = models.SmallIntegerField(default=-1,
+                                            verbose_name="Rating scale")
+    comment = models.TextField(default="",
+                               verbose_name="Comment")
+    value_id = models.SmallIntegerField(default=-1, 
+                                        verbose_name="Value ID")
 
     objects = models.Manager()
 

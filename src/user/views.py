@@ -36,6 +36,8 @@ class SignupView(APIView):
         },
     )
     def post(self, request):
+        # TODO - Add community geo id and update to profile table
+        # TODO - Response - email, name, community_id
         """Signup view"""
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -110,11 +112,12 @@ class LoginView(APIView):
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
 
+            # TODO - User info - email, com id, name
             response_data = {
                 "access_token": access_token,
                 "refresh_token": refresh_token,
             }
-
+            # TODO - Response - email, name, community_id
             # Return the tokens in the response
             return Response(response_data, status=status.HTTP_200_OK)
         else:
