@@ -17,4 +17,19 @@ class AssetSerializer(serializers.ModelSerializer):
         Meta Info for class.
         """
         model = Assets
-        fields = ('pk', 'name', 'description')
+        fields = ("id", 
+                  "name",
+                  "type",
+                  "community_geo_id",
+                  "community_name",
+                  "community_id",
+                  "source_id",
+                  "user_id",
+                  "category_id",
+                  "description",
+                  "website",
+                  "latitude",
+                  "longitude",
+                  "address",
+                  "timestamp",
+                  "status")

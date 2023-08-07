@@ -69,19 +69,21 @@ class Users(AbstractBaseUser):
         db_table = "users"
 
 
-class UserProfile(models.Model):
+class Profiles(models.Model):
     """User Info model"""
     TYPE_CHOICES = [
+        ('default', 'default'),
         ('planner', 'planner'),
         ('citizen', 'citizen'),
     ]
     # one-to-one
     user = models.OneToOneField("Users", 
-                                on_delete=models.CASCADE)
+                                on_delete=models.CASCADE,
+                                primary_key=True)
     type = models.CharField(max_length=25,
                             null=False,
                             choices=TYPE_CHOICES,
-                            default="",
+                            default="default",
                             verbose_name="planner or citizen")
     first_name = models.CharField(max_length=255,
                                   null=False,

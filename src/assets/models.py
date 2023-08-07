@@ -155,9 +155,9 @@ class Assets(models.Model):
     ]
     STATUS_CHOICES = [
         (-1, 'Default'),
-        (0, 'Status 0'),
-        (1, 'Status 1'),
-        (2, 'Status 2'),
+        (0, 'Valid'),
+        (1, 'Missing'),
+        (2, 'Suggestion'),
     ]
     id = models.BigAutoField(primary_key=True, verbose_name="Asset ID")
     name = models.CharField(max_length=255, 

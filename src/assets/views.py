@@ -37,8 +37,8 @@ class AssetsView(APIView):
         Returns:
             response(HttpResponse): Reponse.
         """
-        community_geo_id = request.GET.get('com_geo_id')
-        data = Assets.objects.all()
+        community_geo_id = request.query_params['com_geo_id']
+        data = Assets.objects.all().filter(status__exact=0)
         if community_geo_id:
             data = data.filter(community_geo_id__exact=community_geo_id)
 
