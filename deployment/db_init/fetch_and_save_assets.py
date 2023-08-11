@@ -9,6 +9,7 @@ Author: Mihir Bhaskar, Niranjan Kumawat
 
 from datetime import datetime, timezone
 from pandas import DataFrame
+import pandas as pd
 
 from deployment.db_init.constants import TANGIBLE_ASSET, \
     ASSETS_DATA_LOC, CONFIGURATION
@@ -62,6 +63,7 @@ def de_duplication(data: DataFrame, cols: list):
 
 if __name__ == "__main__":
     communities = CONFIGURATION["communities"]
+    asset_data = DataFrame()
     for community in communities:
         print(f"Adding data for {community['name']}")
 
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         national_data["timestamp"] = datetime.now(timezone.utc)
         national_data["status"] = 0
 
-        asset_data = national_data  # Add from other sources here
+        asset_data = pd.concat([asset_data, national_data])  # Add from other sources here
 
         # Handling duplicate information
         asset_data = de_duplication(asset_data,
@@ -106,6 +108,6 @@ if __name__ == "__main__":
         # Drop index
         asset_data.reset_index(drop=True, inplace=True)
 
-        # Save assets before uploading
-        asset_data.to_csv(ASSETS_DATA_LOC, sep='\t', index=False)
-        print(f"Assets are saved to {ASSETS_DATA_LOC}")
+    # Save assets before uploading
+    asset_data.to_csv(ASSETS_DATA_LOC, sep='\t', index=False)
+    print(f"Assets are saved to {ASSETS_DATA_LOC}")
