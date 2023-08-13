@@ -71,10 +71,13 @@ class Users(AbstractBaseUser):
 
 class Profiles(models.Model):
     """User Info model"""
+    DEFAULT_TYPE = "default"
+    PLANNER_TYPE = "planner"
+    CITIZEN_TYPE = "citizen"
     TYPE_CHOICES = [
-        ('default', 'default'),
-        ('planner', 'planner'),
-        ('citizen', 'citizen'),
+        (DEFAULT_TYPE, 'default'),
+        (PLANNER_TYPE, 'planner'),
+        (CITIZEN_TYPE, 'citizen'),
     ]
     # one-to-one
     user = models.OneToOneField("Users",
@@ -90,36 +93,26 @@ class Profiles(models.Model):
                                   default="",
                                   verbose_name="First name")
     last_name = models.CharField(max_length=255,
-                                 null=True,
+                                 null=False,
+                                 default="",
                                  verbose_name="Last name")
     mobile = models.CharField(max_length=15,
                               null=False,
                               default="",
                               verbose_name="Mobile number")
-    com_name = models.CharField(max_length=255,
-                                null=False,
-                                default="",
-                                verbose_name="Community name")
-    com_geo_id = models.IntegerField(null=False,
-                                     default=-1,
-                                     verbose_name="Community geo ID")
-    dob = models.DateField(null=False,
-                           default=None,
+    dob = models.DateField(null=True,
                            verbose_name="Date of birth")
     ethnicity = models.CharField(max_length=100,
-                                 default="",
+                                 null=True,
                                  verbose_name="Ethnicity")
     race = models.CharField(max_length=50,
-                            default="",
+                            null=True,
                             verbose_name="Race")
     gender = models.CharField(max_length=50,
-                              default="",
+                              null=True,
                               verbose_name="Gender")
 
     # Relations
-    # one-to-one
-    user = models.OneToOneField("Users",
-                                on_delete=models.CASCADE)
     # many(user)-to-one(community)
     # Delete all users if a community is deleted
     community = models.ForeignKey("assets.Communities",
