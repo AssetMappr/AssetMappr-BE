@@ -73,7 +73,7 @@ class Communities(models.Model):
         longitude (double): Community's longitude
         objects(objects): Collection of objects. Part of Django.
     """
-    id = models.AutoField(primary_key=True, verbose_name="Geo ID")
+    id = models.AutoField(primary_key=True, verbose_name="ID")
     geo_id = models.IntegerField(unique=True, verbose_name="Geo ID")
     name = models.CharField(max_length=255,
                             null=False,

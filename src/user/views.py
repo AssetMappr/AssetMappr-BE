@@ -9,6 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from .models import Users, Profiles
+from assets.models import Communities
 from .serializers import UserSerializer
 
 
@@ -27,7 +28,10 @@ class SignupView(APIView):
                 "comGeoId": openapi.Schema(type=openapi.TYPE_NUMBER),
                 "name": openapi.Schema(type=openapi.TYPE_STRING),
                 "mobile": openapi.Schema(type=openapi.TYPE_STRING),
+                "type": openapi.Schema(type=openapi.TYPE_STRING,
+                                       enum=[Profiles.PLANNER_TYPE, Profiles.CITIZEN_TYPE]),
             },
+            required = ["email", "password", "comGeoId", "name", "mobile", "type"]
         ),
         responses={
             status.HTTP_201_CREATED: openapi.Response(
@@ -58,20 +62,30 @@ class SignupView(APIView):
                     status=status.HTTP_409_CONFLICT,
                 )
             except Users.DoesNotExist:
+                try:
+                    # Get community details
+                    community_geo_id = int(request.data["comGeoId"])
+                    community = Communities.objects.get(geo_id=community_geo_id)
+                except Communities.DoesNotExist:
+                    return Response({f"error": "Community Geo ID invalid"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+                
                 # Create a new user instance
                 user = Users(email=email)
                 user.set_password(password)
                 user.save()
 
+                
                 # Attach profile information
-                community_geo_id = request.data["comGeoId"]
                 name = request.data["name"]
                 mobile = request.data["mobile"]
+                user_type = request.data["type"]             
                 profile = Profiles(
                     user=user,
                     first_name=name,
-                    com_geo_id=community_geo_id,
-                    mobile=mobile)
+                    community=community,
+                    mobile=mobile,
+                    type=user_type)
                 profile.save()
 
                 response_data = {"userId": user.id}
@@ -90,6 +104,7 @@ class LoginView(APIView):
                 "email": openapi.Schema(type=openapi.TYPE_STRING),
                 "password": openapi.Schema(type=openapi.TYPE_STRING),
             },
+            required = ["email", "password"]
         ),
         responses={
             status.HTTP_200_OK: openapi.Response(
@@ -134,8 +149,8 @@ class LoginView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-            name = f"{user.profile.first_name} {user.profile.last_name}"
-            community_id = user.profile.com_geo_id
+            name = f"{user.profiles.first_name} {user.profiles.last_name}"
+            community_id = user.profiles.community.geo_id
 
             response_data = {
                 "access_token": access_token,
